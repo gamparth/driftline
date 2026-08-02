@@ -48,7 +48,6 @@ export async function extractPdfPages(data: Uint8Array): Promise<PdfPageLines[]>
   // Buffer transfer would detach the caller's array; hand pdf.js its own copy.
   const task = pdfjs.getDocument({
     data: new Uint8Array(data),
-    isEvalSupported: false,
     useSystemFonts: false,
     // Only text extraction is needed, so missing glyph data is harmless — but
     // pointing at the bundled copy keeps pdf.js from warning on every page.

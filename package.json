@@ -12,6 +12,7 @@
     "fixtures": "npx tsx scripts/generate-fixtures.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
     "idb": "^8.0.3",
     "next": "16.2.12",
     "pdfjs-dist": "^6.2.108",
