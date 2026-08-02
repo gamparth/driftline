@@ -1,0 +1,14 @@
+{
+  "lab": "NORTHGATE PATHOLOGY",
+  "sampledAt": "2022-11-03",
+  "values": [
+    { "markerId": "glucose", "value": 91.893, "unit": "mg/dL", "referenceRange": { "low": 70.271, "high": 99.1 } },
+    { "markerId": "total-cholesterol", "value": 189.483, "unit": "mg/dL", "referenceRange": { "low": null, "high": 201.084 } },
+    { "markerId": "ldl", "value": 112.143, "unit": "mg/dL", "referenceRange": { "low": null, "high": 116.01 } },
+    { "markerId": "hdl", "value": 54.138, "unit": "mg/dL", "referenceRange": { "low": 38.67, "high": null } },
+    { "markerId": "creatinine", "value": 0.9502, "unit": "mg/dL", "referenceRange": { "low": 0.7014, "high": 1.1991 } },
+    { "markerId": "hba1c", "value": 5.444, "unit": "%", "referenceRange": { "low": null, "high": 5.993 } },
+    { "markerId": "hemoglobin", "value": 14.8, "unit": "g/dL", "referenceRange": { "low": 13.5, "high": 17.5 } },
+    { "markerId": "ferritin", "value": 96, "unit": "ng/mL", "referenceRange": { "low": 30, "high": 400 } }
+  ]
+}

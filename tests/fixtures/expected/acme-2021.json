@@ -1,0 +1,14 @@
+{
+  "lab": "ACME DIAGNOSTICS",
+  "sampledAt": "2021-06-12",
+  "values": [
+    { "markerId": "glucose", "value": 88, "unit": "mg/dL", "referenceRange": { "low": 70, "high": 99 } },
+    { "markerId": "total-cholesterol", "value": 182, "unit": "mg/dL", "referenceRange": { "low": 125, "high": 200 } },
+    { "markerId": "ldl", "value": 104, "unit": "mg/dL", "referenceRange": { "low": 0, "high": 100 } },
+    { "markerId": "hdl", "value": 56, "unit": "mg/dL", "referenceRange": { "low": 40, "high": 60 } },
+    { "markerId": "triglycerides", "value": 110, "unit": "mg/dL", "referenceRange": { "low": 0, "high": 150 } },
+    { "markerId": "creatinine", "value": 0.95, "unit": "mg/dL", "referenceRange": { "low": 0.7, "high": 1.3 } },
+    { "markerId": "alt", "value": 24, "unit": "U/L", "referenceRange": { "low": 7, "high": 56 } },
+    { "markerId": "tsh", "value": 1.8, "unit": "mIU/L", "referenceRange": { "low": 0.45, "high": 4.5 } }
+  ]
+}

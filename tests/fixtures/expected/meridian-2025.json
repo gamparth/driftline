@@ -1,0 +1,14 @@
+{
+  "lab": "MERIDIAN HEALTH LABORATORY",
+  "sampledAt": "2025-04-07",
+  "values": [
+    { "markerId": "glucose", "value": 118, "unit": "mg/dL", "referenceRange": { "low": 70, "high": 99 } },
+    { "markerId": "hba1c", "value": 6.4, "unit": "%", "referenceRange": { "low": null, "high": 5.7 } },
+    { "markerId": "ldl", "value": 141, "unit": "mg/dL", "referenceRange": { "low": null, "high": 100 } },
+    { "markerId": "hdl", "value": 44, "unit": "mg/dL", "referenceRange": { "low": 40, "high": null } },
+    { "markerId": "triglycerides", "value": 198, "unit": "mg/dL", "referenceRange": { "low": null, "high": 150 } },
+    { "markerId": "creatinine", "value": 1.42, "unit": "mg/dL", "referenceRange": { "low": 0.7, "high": 1.3 } },
+    { "markerId": "alt", "value": 62, "unit": "U/L", "referenceRange": { "low": 7, "high": 56 } },
+    { "markerId": "ferritin", "value": 412, "unit": "ng/mL", "referenceRange": { "low": 30, "high": 400 } }
+  ]
+}

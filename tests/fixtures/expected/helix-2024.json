@@ -1,0 +1,14 @@
+{
+  "lab": "HELIX LABS",
+  "sampledAt": "2024-01-19",
+  "values": [
+    { "markerId": "glucose", "value": 103, "unit": "mg/dL", "referenceRange": { "low": 70, "high": 99 } },
+    { "markerId": "hba1c", "value": 5.9, "unit": "%", "referenceRange": { "low": null, "high": 5.7 } },
+    { "markerId": "ldl", "value": 138, "unit": "mg/dL", "referenceRange": { "low": null, "high": 100 } },
+    { "markerId": "hdl", "value": 48, "unit": "mg/dL", "referenceRange": { "low": 40, "high": null } },
+    { "markerId": "triglycerides", "value": 165, "unit": "mg/dL", "referenceRange": { "low": 0, "high": 150 } },
+    { "markerId": "tsh", "value": 2.4, "unit": "mIU/L", "referenceRange": { "low": 0.45, "high": 4.5 } },
+    { "markerId": "vitamin-d", "value": 22, "unit": "ng/mL", "referenceRange": { "low": 30, "high": 100 } },
+    { "markerId": "creatinine", "value": 1.06, "unit": "mg/dL", "referenceRange": { "low": 0.7, "high": 1.3 } }
+  ]
+}
