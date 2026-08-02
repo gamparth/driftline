@@ -46,6 +46,8 @@ async function loadPdfjs() {
 export async function extractPdfPages(data: Uint8Array): Promise<PdfPageLines[]> {
   const pdfjs = await loadPdfjs();
   // Buffer transfer would detach the caller's array; hand pdf.js its own copy.
+  // No isEvalSupported here: pdf.js v6 removed both the option and the
+  // eval-based font path it guarded, so passing it is a type error and a no-op.
   const task = pdfjs.getDocument({
     data: new Uint8Array(data),
     useSystemFonts: false,

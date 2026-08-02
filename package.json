@@ -27,6 +27,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
+    "fake-indexeddb": "^6.2.5",
     "pdf-lib": "^1.17.1",
     "tailwindcss": "^4",
     "tsx": "^4.23.4",
