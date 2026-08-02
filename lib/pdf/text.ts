@@ -26,6 +26,15 @@ export interface PdfPageLines {
 const isNode =
   typeof process !== "undefined" && process.versions?.node && typeof window === "undefined";
 
+/**
+ * Built by concatenation rather than `new URL(..., import.meta.url)`: the
+ * bundler statically resolves that form and fails on a path that only exists
+ * under Node.
+ */
+function nodeStandardFontsUrl(): string {
+  return `file://${process.cwd()}/node_modules/pdfjs-dist/standard_fonts/`;
+}
+
 async function loadPdfjs() {
   // Node has no DOMMatrix/Path2D, so tests load the legacy build; the browser
   // gets the modern one. Both expose the same getDocument API.
@@ -53,9 +62,7 @@ export async function extractPdfPages(data: Uint8Array): Promise<PdfPageLines[]>
     useSystemFonts: false,
     // Only text extraction is needed, so missing glyph data is harmless — but
     // pointing at the bundled copy keeps pdf.js from warning on every page.
-    standardFontDataUrl: isNode
-      ? new URL("../../node_modules/pdfjs-dist/standard_fonts/", import.meta.url).toString()
-      : "/pdfjs/standard_fonts/",
+    standardFontDataUrl: isNode ? nodeStandardFontsUrl() : "/pdfjs/standard_fonts/",
   });
   const doc = await task.promise;
 
