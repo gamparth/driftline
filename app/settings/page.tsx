@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PageHeader, Section, Shell } from "@/components/Shell";
 import { MODEL, clearApiKey, getApiKey, setApiKey, verifyApiKey } from "@/lib/llm/client";
@@ -37,86 +38,106 @@ export default function SettingsPage() {
   return (
     <Shell>
       <PageHeader eyebrow="Configuration" title="Settings">
-        <p className="text-sm leading-relaxed text-muted md:text-base">
-          Vitals works without a key for standard tabular lab layouts. A key unlocks two optional
-          features: extraction for layouts the built-in parser cannot read, and the
-          questions-for-your-doctor generator.
+        <p className="text-sm leading-relaxed text-muted">
+          Vitals reads standard lab layouts and computes every flag without a key. A key adds two
+          optional things: reading layouts the built-in parser can&apos;t, and drafting questions
+          from flagged markers.
         </p>
       </PageHeader>
 
       <Section>
         <div className="max-w-2xl">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
-            Anthropic API key
-          </p>
+          <div className="rounded-xl border border-line bg-surface p-6 md:p-8">
+            <h2 className="font-display text-lg text-ink">Anthropic API key</h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted">
+              {saved
+                ? "A key is saved in this browser. Paste a new one to replace it."
+                : "Optional. Paste a key to enable the AI extractor and question drafting."}
+            </p>
 
-          <div className="mt-5 flex flex-wrap gap-3">
-            <input
-              type="password"
-              value={value}
-              onChange={(e) => {
-                setValue(e.target.value);
-                setStatus({ kind: "idle" });
-              }}
-              placeholder={saved ? "A key is saved — paste a new one to replace it" : "sk-ant-…"}
-              className="min-w-0 flex-1 rounded-md border border-edge bg-surface px-4 py-2.5 font-mono text-sm text-paper placeholder:text-muted focus:border-accent focus:outline-none"
-            />
-            <button
-              onClick={save}
-              disabled={!value.trim() || status.kind === "verifying"}
-              className="rounded-md border border-accent px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-accent transition-colors duration-200 hover:bg-accent hover:text-bg disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-accent"
-            >
-              {status.kind === "verifying" ? "Verifying…" : "Verify & save"}
-            </button>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <input
+                type="password"
+                value={value}
+                onChange={(e) => {
+                  setValue(e.target.value);
+                  setStatus({ kind: "idle" });
+                }}
+                placeholder={saved ? "Replace saved key…" : "sk-ant-…"}
+                aria-label="Anthropic API key"
+                className="min-w-0 flex-1 rounded-lg border border-line bg-bg px-4 py-2.5 font-mono text-sm text-ink placeholder:text-muted focus:border-brand focus:outline-none"
+              />
+              <button
+                onClick={save}
+                disabled={!value.trim() || status.kind === "verifying"}
+                className="rounded-lg bg-brand px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white transition-opacity duration-200 hover:opacity-90 disabled:opacity-40"
+              >
+                {status.kind === "verifying" ? "Verifying…" : "Verify & save"}
+              </button>
+            </div>
+
+            {status.kind === "error" ? (
+              <p className="mt-4 text-sm text-alert">{status.message}</p>
+            ) : null}
+            {status.kind === "saved" ? (
+              <p className="mt-4 text-sm text-ok">Key verified against the API and saved.</p>
+            ) : null}
+
+            {saved ? (
+              <button
+                onClick={() => {
+                  clearApiKey();
+                  setSaved(false);
+                  setStatus({ kind: "idle" });
+                }}
+                className="mt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted transition-colors duration-200 hover:text-alert"
+              >
+                Remove saved key
+              </button>
+            ) : null}
           </div>
 
-          {status.kind === "error" ? (
-            <p className="mt-4 font-mono text-[11px] text-accent">{status.message}</p>
-          ) : null}
-          {status.kind === "saved" ? (
-            <p className="mt-4 font-mono text-[11px] text-accent">
-              Key verified against the API and saved.
-            </p>
-          ) : null}
-
-          {saved ? (
-            <button
-              onClick={() => {
-                clearApiKey();
-                setSaved(false);
-                setStatus({ kind: "idle" });
-              }}
-              className="mt-6 font-mono text-[10px] uppercase tracking-[0.2em] text-muted transition-colors duration-200 hover:text-accent"
-            >
-              Remove saved key
-            </button>
-          ) : null}
-
-          <div className="mt-16 border-t border-edge pt-10">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
-              How the key is used
-            </p>
+          <div className="mt-10 rounded-xl border border-line bg-surface p-6 md:p-8">
+            <h2 className="font-display text-lg text-ink">What the key is used for</h2>
             <ul className="mt-5 space-y-4 text-sm leading-relaxed text-muted">
               <li>
-                Stored in this browser&apos;s localStorage. It is never sent anywhere except
-                Anthropic&apos;s API, in the request that uses it.
+                <strong className="font-medium text-ink">Stored locally.</strong> It lives in this
+                browser&apos;s localStorage and is sent nowhere except Anthropic&apos;s API, in the
+                request that uses it.
               </li>
               <li>
-                Calls go from your browser straight to <span className="font-mono">api.anthropic.com</span>{" "}
-                using model <span className="font-mono">{MODEL}</span>. Vitals has no server, so
-                there is nothing in between.
+                <strong className="font-medium text-ink">Direct from your browser.</strong> Calls
+                go straight to <span className="font-mono text-ink">api.anthropic.com</span> using{" "}
+                <span className="font-mono text-ink">{MODEL}</span>. Vitals has no server, so
+                there is nothing in between to log anything.
               </li>
               <li>
-                Extraction sends the text of a report the parser could not read. Question
-                generation sends only flagged marker names, values, and dates — never your whole
-                record.
+                <strong className="font-medium text-ink">Minimal payloads.</strong> Extraction
+                sends the text of a report the parser could not read. Question drafting sends only
+                flagged marker names, values, and dates — never your whole record.
               </li>
               <li>
-                Saving verifies the key with one minimal request so a bad key fails here rather
-                than mid-upload.
+                <strong className="font-medium text-ink">Verified on save.</strong> One minimal
+                request confirms the key works, so a bad key fails here rather than mid-upload.
               </li>
             </ul>
           </div>
+
+          <div className="mt-10 rounded-xl border border-line bg-surface p-6 md:p-8">
+            <h2 className="font-display text-lg text-ink">Appearance</h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted">
+              Light and dark are both first-class. Use the toggle in the header — the choice is
+              remembered in this browser and applied before the page paints.
+            </p>
+          </div>
+
+          <p className="mt-10 text-sm text-muted">
+            Export, import, or delete your record on the{" "}
+            <Link href="/reports" className="text-brand underline underline-offset-4">
+              data page
+            </Link>
+            .
+          </p>
         </div>
       </Section>
     </Shell>

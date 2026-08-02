@@ -1,32 +1,137 @@
 @import "tailwindcss";
 
+/*
+ * Vitals design language.
+ *
+ * Light-first and paper-like, the way clinical records and the serious
+ * consumer-health products read: warm off-white, near-black ink, generous
+ * whitespace, hairline rules instead of boxes. Colour is functional — it means
+ * "inside the printed range", "outside it", or "worth a look" and is used
+ * nowhere else. Dark mode is a real second theme, not an inversion.
+ */
+
 :root {
-  --bg: #0a0a0a;
-  --surface: #111111;
-  --paper: #ededed;
-  --muted: #8a8a8a;
-  --border: rgba(255, 255, 255, 0.1);
-  --accent: #22c55e;
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --surface-2: #f3f1ec;
+  --ink: #15181b;
+  --ink-soft: #3d444b;
+  --muted: #6a7178;
+  --hairline: rgba(21, 24, 27, 0.1);
+  --hairline-strong: rgba(21, 24, 27, 0.18);
+
+  --brand: #0d6a58;
+  --brand-soft: rgba(13, 106, 88, 0.1);
+
+  --ok: #10715a;
+  --ok-soft: rgba(16, 113, 90, 0.12);
+  --warn: #9a5b00;
+  --warn-soft: rgba(154, 91, 0, 0.12);
+  --alert: #ad2a20;
+  --alert-soft: rgba(173, 42, 32, 0.1);
+
+  --shadow-card: 0 1px 2px rgba(21, 24, 27, 0.05);
+  --shadow-lift: 0 2px 8px rgba(21, 24, 27, 0.07);
+}
+
+:root[data-theme="dark"] {
+  --bg: #0d1012;
+  --surface: #14181b;
+  --surface-2: #1b2024;
+  --ink: #eceef0;
+  --ink-soft: #c3c9ce;
+  --muted: #8d959c;
+  --hairline: rgba(255, 255, 255, 0.11);
+  --hairline-strong: rgba(255, 255, 255, 0.2);
+
+  --brand: #4ecfab;
+  --brand-soft: rgba(78, 207, 171, 0.14);
+
+  --ok: #4ecfab;
+  --ok-soft: rgba(78, 207, 171, 0.14);
+  --warn: #edad4c;
+  --warn-soft: rgba(237, 173, 76, 0.14);
+  --alert: #ff7a6e;
+  --alert-soft: rgba(255, 122, 110, 0.14);
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-lift: 0 2px 10px rgba(0, 0, 0, 0.45);
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
-  --color-paper: var(--paper);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
   --color-muted: var(--muted);
-  --color-edge: var(--border);
-  --color-accent: var(--accent);
-  --font-display: var(--font-syne);
+  --color-line: var(--hairline);
+  --color-line-strong: var(--hairline-strong);
+
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-alert: var(--alert);
+  --color-alert-soft: var(--alert-soft);
+
+  --font-display: var(--font-fraunces);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains);
 }
 
+* {
+  border-color: var(--hairline);
+}
+
+html {
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
 body {
   background: var(--bg);
-  color: var(--paper);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  color: var(--ink);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "cv05" 1, "ss01" 1;
+  -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 30%, transparent);
+  background: var(--brand-soft);
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Display type: Fraunces at a low optical size reads clinical rather than editorial. */
+.font-display {
+  font-variation-settings: "SOFT" 0, "WONK" 0, "opsz" 40;
+  letter-spacing: -0.02em;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@media print {
+  :root {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --hairline: rgba(0, 0, 0, 0.2);
+  }
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
 }

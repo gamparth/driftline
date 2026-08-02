@@ -2,13 +2,176 @@
   "lab": "MERIDIAN HEALTH LABORATORY",
   "sampledAt": "2025-04-07",
   "values": [
-    { "markerId": "glucose", "value": 118, "unit": "mg/dL", "referenceRange": { "low": 70, "high": 99 } },
-    { "markerId": "hba1c", "value": 6.4, "unit": "%", "referenceRange": { "low": null, "high": 5.7 } },
-    { "markerId": "ldl", "value": 141, "unit": "mg/dL", "referenceRange": { "low": null, "high": 100 } },
-    { "markerId": "hdl", "value": 44, "unit": "mg/dL", "referenceRange": { "low": 40, "high": null } },
-    { "markerId": "triglycerides", "value": 198, "unit": "mg/dL", "referenceRange": { "low": null, "high": 150 } },
-    { "markerId": "creatinine", "value": 1.42, "unit": "mg/dL", "referenceRange": { "low": 0.7, "high": 1.3 } },
-    { "markerId": "alt", "value": 62, "unit": "U/L", "referenceRange": { "low": 7, "high": 56 } },
-    { "markerId": "ferritin", "value": 412, "unit": "ng/mL", "referenceRange": { "low": 30, "high": 400 } }
+    {
+      "markerId": "glucose",
+      "value": 118,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": 70,
+        "high": 99
+      }
+    },
+    {
+      "markerId": "hba1c",
+      "value": 6.4,
+      "unit": "%",
+      "referenceRange": {
+        "low": null,
+        "high": 5.7
+      }
+    },
+    {
+      "markerId": "ldl",
+      "value": 141,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": null,
+        "high": 100
+      }
+    },
+    {
+      "markerId": "hdl",
+      "value": 44,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": 40,
+        "high": null
+      }
+    },
+    {
+      "markerId": "triglycerides",
+      "value": 198,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": null,
+        "high": 150
+      }
+    },
+    {
+      "markerId": "creatinine",
+      "value": 1.42,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": 0.7,
+        "high": 1.3
+      }
+    },
+    {
+      "markerId": "alt",
+      "value": 62,
+      "unit": "U/L",
+      "referenceRange": {
+        "low": 7,
+        "high": 56
+      }
+    },
+    {
+      "markerId": "ferritin",
+      "value": 412,
+      "unit": "ng/mL",
+      "referenceRange": {
+        "low": 30,
+        "high": 400
+      }
+    },
+    {
+      "markerId": "ast",
+      "value": 48,
+      "unit": "U/L",
+      "referenceRange": {
+        "low": 10,
+        "high": 40
+      }
+    },
+    {
+      "markerId": "alp",
+      "value": 96,
+      "unit": "U/L",
+      "referenceRange": {
+        "low": 44,
+        "high": 121
+      }
+    },
+    {
+      "markerId": "albumin",
+      "value": 4.1,
+      "unit": "g/dL",
+      "referenceRange": {
+        "low": 3.5,
+        "high": 5.0
+      }
+    },
+    {
+      "markerId": "bun",
+      "value": 22,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": 7,
+        "high": 20
+      }
+    },
+    {
+      "markerId": "sodium",
+      "value": 138,
+      "unit": "mmol/L",
+      "referenceRange": {
+        "low": 135,
+        "high": 145
+      }
+    },
+    {
+      "markerId": "potassium",
+      "value": 4.6,
+      "unit": "mmol/L",
+      "referenceRange": {
+        "low": 3.5,
+        "high": 5.2
+      }
+    },
+    {
+      "markerId": "calcium",
+      "value": 9.6,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": 8.6,
+        "high": 10.2
+      }
+    },
+    {
+      "markerId": "hemoglobin",
+      "value": 14.2,
+      "unit": "g/dL",
+      "referenceRange": {
+        "low": 13.5,
+        "high": 17.5
+      }
+    },
+    {
+      "markerId": "wbc",
+      "value": 7.4,
+      "unit": "10³/µL",
+      "referenceRange": {
+        "low": 4.0,
+        "high": 11.0
+      }
+    },
+    {
+      "markerId": "platelets",
+      "value": 210,
+      "unit": "10³/µL",
+      "referenceRange": {
+        "low": 150,
+        "high": 400
+      }
+    },
+    {
+      "markerId": "vitamin-d",
+      "value": 28,
+      "unit": "ng/mL",
+      "referenceRange": {
+        "low": 30,
+        "high": 100
+      }
+    }
   ]
 }

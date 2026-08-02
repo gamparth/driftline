@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Syne, Inter, JetBrains_Mono } from "next/font/google";
+import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const syne = Syne({
-  variable: "--font-syne",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
+  axes: ["SOFT", "WONK", "opsz"],
 });
 
 const inter = Inter({
@@ -18,7 +19,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VITALS — Health Records Timeline",
+  title: "Vitals — Health Records Timeline",
   description:
     "Every lab report, one longitudinal record. Local-first: your data never leaves this machine.",
   other: {
@@ -39,6 +40,9 @@ export const metadata: Metadata = {
   },
 };
 
+/** Resolves the theme before first paint so the page never flashes the wrong one. */
+const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem("vitals.theme");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="light"}})()`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -47,8 +51,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${syne.variable} ${inter.variable} ${jetbrains.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${fraunces.variable} ${inter.variable} ${jetbrains.variable} h-full`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

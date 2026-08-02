@@ -1,143 +1,230 @@
+"use client";
+
+import { useState } from "react";
 import { buildGeometry } from "@/lib/chart/geometry";
 import type { MarkerSeries } from "@/lib/engine/types";
+import { formatDate, formatMonthYear, formatValue } from "@/lib/format";
 
+/** Thumbnail trend. Time-spaced, so cadence reads honestly even at this size. */
 export function Sparkline({ series }: { series: MarkerSeries }) {
-  const g = buildGeometry(series, { width: 240, height: 64, padding: 6 });
+  const g = buildGeometry(series, { width: 260, height: 56, padding: 6 });
   return (
     <svg
       viewBox={`0 0 ${g.width} ${g.height}`}
-      className="h-16 w-full"
+      className="h-14 w-full"
       role="img"
-      aria-label={`${series.markerLabel} trend`}
+      aria-label={`${series.markerLabel} trend, ${series.points.length} samples`}
       preserveAspectRatio="none"
     >
-      {g.band ? (
+      {g.bands.map((band, i) => (
         <rect
-          x={0}
-          y={g.band.y}
-          width={g.width}
-          height={g.band.height}
-          className="fill-accent/8"
+          key={i}
+          x={band.x0}
+          y={band.y}
+          width={band.x1 - band.x0}
+          height={band.height}
+          className="fill-ok-soft"
         />
-      ) : null}
-      <polyline points={g.path} fill="none" className="stroke-muted" strokeWidth={1.5} />
+      ))}
+      <polyline
+        points={g.path}
+        fill="none"
+        className="stroke-ink-soft"
+        strokeWidth={1.5}
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+      />
       {g.points.map((p, i) => (
         <circle
           key={i}
           cx={p.x}
           cy={p.y}
-          r={p.outOfRange ? 3 : 2}
-          className={p.outOfRange ? "fill-accent" : "fill-muted"}
+          r={p.outOfRange ? 3.2 : 2}
+          className={p.outOfRange ? "fill-alert" : "fill-ink-soft"}
         />
       ))}
     </svg>
   );
 }
 
-const CHART_W = 720;
-const CHART_H = 280;
-const PAD = 24;
+const W = 760;
+const H = 300;
+const PAD_L = 52;
+const PAD_R = 20;
+const PAD_T = 20;
+const PAD_B = 44;
 
+/** Full marker chart: reference band, gridlines, and per-sample inspection. */
 export function MarkerChart({ series }: { series: MarkerSeries }) {
-  const g = buildGeometry(series, { width: CHART_W, height: CHART_H, padding: PAD });
-  const gridlines = 4;
+  const [active, setActive] = useState<number | null>(null);
+
+  const g = buildGeometry(series, { width: W, height: H, padding: 0 });
+  // buildGeometry pads symmetrically; this chart needs asymmetric axis gutters,
+  // so it maps the normalised geometry into the plot rectangle itself.
+  const plotW = W - PAD_L - PAD_R;
+  const plotH = H - PAD_T - PAD_B;
+  const mapX = (x: number) => PAD_L + (x / W) * plotW;
+  const mapY = (y: number) => PAD_T + (y / H) * plotH;
+
+  const points = g.points.map((p) => ({ ...p, cx: mapX(p.x), cy: mapY(p.y) }));
+  const path = points.map((p) => `${p.cx},${p.cy}`).join(" ");
+  const ticks = 4;
+  const activePoint = active !== null ? points[active] : null;
 
   return (
-    <div className="overflow-x-auto">
-      <svg
-        viewBox={`0 0 ${CHART_W} ${CHART_H}`}
-        className="min-w-[560px] w-full"
-        role="img"
-        aria-label={`${series.markerLabel} over time, in ${series.unit}`}
-      >
-        {Array.from({ length: gridlines + 1 }, (_, i) => {
-          const y = PAD + ((CHART_H - PAD * 2) / gridlines) * i;
-          const value = g.yMax - ((g.yMax - g.yMin) / gridlines) * i;
-          return (
+    <div className="rounded-xl border border-line bg-surface p-5 md:p-6">
+      <div className="overflow-x-auto">
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          className="w-full min-w-[600px]"
+          role="img"
+          aria-label={`${series.markerLabel} over time in ${series.unit}`}
+          onMouseLeave={() => setActive(null)}
+        >
+          {Array.from({ length: ticks + 1 }, (_, i) => {
+            const y = PAD_T + (plotH / ticks) * i;
+            const value = g.yMax - ((g.yMax - g.yMin) / ticks) * i;
+            return (
+              <g key={i}>
+                <line
+                  x1={PAD_L}
+                  x2={W - PAD_R}
+                  y1={y}
+                  y2={y}
+                  className="stroke-line"
+                  strokeWidth={1}
+                />
+                <text
+                  x={PAD_L - 10}
+                  y={y + 3.5}
+                  textAnchor="end"
+                  className="fill-muted font-mono text-[10px] tabular"
+                >
+                  {formatValue(value)}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* One band per sample: identical ranges tile into a flat band, and
+              differing ones step, so every point is shown against its own. */}
+          {g.bands.map((band, i) => {
+            const x0 = mapX(band.x0);
+            const x1 = mapX(band.x1);
+            const y = mapY(band.y);
+            const height = (band.height / H) * plotH;
+            return (
+              <g key={`band-${i}`}>
+                <rect x={x0} y={y} width={x1 - x0} height={height} className="fill-ok-soft" />
+                {!band.openTop ? (
+                  <line x1={x0} x2={x1} y1={y} y2={y} className="stroke-ok/45" strokeWidth={1} />
+                ) : null}
+                {!band.openBottom ? (
+                  <line
+                    x1={x0}
+                    x2={x1}
+                    y1={y + height}
+                    y2={y + height}
+                    className="stroke-ok/45"
+                    strokeWidth={1}
+                  />
+                ) : null}
+              </g>
+            );
+          })}
+
+          <polyline
+            points={path}
+            fill="none"
+            className="stroke-ink"
+            strokeWidth={2}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+
+          {activePoint ? (
+            <line
+              x1={activePoint.cx}
+              x2={activePoint.cx}
+              y1={PAD_T}
+              y2={PAD_T + plotH}
+              className="stroke-line-strong"
+              strokeWidth={1}
+            />
+          ) : null}
+
+          {points.map((p, i) => (
             <g key={i}>
-              <line
-                x1={PAD}
-                x2={CHART_W - PAD}
-                y1={y}
-                y2={y}
-                className="stroke-white/10"
-                strokeWidth={1}
+              <circle
+                cx={p.cx}
+                cy={p.cy}
+                r={active === i ? 6.5 : p.outOfRange ? 5 : 4}
+                className={p.outOfRange ? "fill-alert" : "fill-ink"}
               />
-              <text
-                x={0}
-                y={y - 4}
-                className="fill-muted font-mono text-[10px] tabular-nums"
-              >
-                {formatTick(value)}
-              </text>
+              {/* generous invisible hit area so hovering a 4px dot is easy */}
+              <circle
+                cx={p.cx}
+                cy={p.cy}
+                r={18}
+                fill="transparent"
+                onMouseEnter={() => setActive(i)}
+                onFocus={() => setActive(i)}
+                tabIndex={0}
+                role="button"
+                aria-label={`${formatDate(p.value.sampledAt)}: ${formatValue(p.value.value)} ${series.unit}`}
+                className="cursor-pointer outline-none"
+              />
             </g>
-          );
-        })}
+          ))}
 
-        {g.band ? (
-          <>
-            <rect
-              x={PAD}
-              y={g.band.y}
-              width={CHART_W - PAD * 2}
-              height={g.band.height}
-              className="fill-accent/8"
-            />
-            <line
-              x1={PAD}
-              x2={CHART_W - PAD}
-              y1={g.band.y}
-              y2={g.band.y}
-              className="stroke-accent/30"
-              strokeDasharray="3 3"
-            />
-            <line
-              x1={PAD}
-              x2={CHART_W - PAD}
-              y1={g.band.y + g.band.height}
-              y2={g.band.y + g.band.height}
-              className="stroke-accent/30"
-              strokeDasharray="3 3"
-            />
-          </>
-        ) : null}
+          {points.map((p, i) => {
+            // Label only the ends plus the active point, so dense series stay legible.
+            const show = i === 0 || i === points.length - 1 || active === i;
+            if (!show) return null;
+            return (
+              <text
+                key={`x-${i}`}
+                x={p.cx}
+                y={H - 16}
+                textAnchor={i === 0 ? "start" : i === points.length - 1 ? "end" : "middle"}
+                className={`font-mono text-[10px] tabular ${active === i ? "fill-ink" : "fill-muted"}`}
+              >
+                {formatMonthYear(p.value.sampledAt)}
+              </text>
+            );
+          })}
+        </svg>
+      </div>
 
-        <polyline points={g.path} fill="none" className="stroke-paper" strokeWidth={2} />
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-4">
+        <div className="flex flex-wrap items-center gap-4 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+          {g.bands.length > 0 ? (
+            <span className="inline-flex items-center gap-2">
+              <span className="h-2 w-4 rounded-sm bg-ok-soft" />
+              {g.band ? "reference range" : "reference range — steps where labs differ"}
+            </span>
+          ) : (
+            <span>No reference ranges printed</span>
+          )}
+          <span className="inline-flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-alert" /> outside range
+          </span>
+        </div>
 
-        {g.points.map((p, i) => (
-          <g key={i}>
-            <circle
-              cx={p.x}
-              cy={p.y}
-              r={p.outOfRange ? 5 : 3.5}
-              className={p.outOfRange ? "fill-accent" : "fill-paper"}
-            />
-            <text
-              x={p.x}
-              y={CHART_H - 6}
-              textAnchor="middle"
-              className="fill-muted font-mono text-[10px] tabular-nums"
-            >
-              {p.value.sampledAt.slice(0, 7)}
-            </text>
-          </g>
-        ))}
-      </svg>
-      {g.band ? (
-        <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
-          Shaded band = reference range · accent dots = outside it
-        </p>
-      ) : (
-        <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
-          Labs printed different reference ranges — no shared band shown
-        </p>
-      )}
+        <div className="font-mono text-[11px] tabular text-ink">
+          {activePoint ? (
+            <>
+              {formatDate(activePoint.value.sampledAt)} ·{" "}
+              <span className={activePoint.outOfRange ? "text-alert" : "text-ink"}>
+                {formatValue(activePoint.value.value)} {series.unit}
+              </span>{" "}
+              <span className="text-muted">· {activePoint.value.lab}</span>
+            </>
+          ) : (
+            <span className="text-muted">Hover a point for detail</span>
+          )}
+        </div>
+      </div>
     </div>
   );
-}
-
-function formatTick(value: number): string {
-  if (Math.abs(value) >= 100) return value.toFixed(0);
-  if (Math.abs(value) >= 10) return value.toFixed(1);
-  return value.toFixed(2);
 }

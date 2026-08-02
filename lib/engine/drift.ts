@@ -1,3 +1,4 @@
+import { formatValue } from "@/lib/format";
 import type { DriftFlag, MarkerSeries, NormalizedValue } from "./types";
 
 const DELTA_THRESHOLD_PCT = 20;
@@ -5,8 +6,8 @@ const DELTA_THRESHOLD_PCT = 20;
 function outOfRange(v: NormalizedValue): string | null {
   const r = v.referenceRange;
   if (!r) return null;
-  if (r.low !== null && v.value < r.low) return `below range (low ${r.low})`;
-  if (r.high !== null && v.value > r.high) return `above range (high ${r.high})`;
+  if (r.low !== null && v.value < r.low) return `below range (low ${formatValue(r.low)})`;
+  if (r.high !== null && v.value > r.high) return `above range (high ${formatValue(r.high)})`;
   return null;
 }
 
@@ -46,7 +47,7 @@ export function detectDrift(series: MarkerSeries[]): DriftFlag[] {
               sampledAt: point.sampledAt,
               value: point.value,
               unit: s.unit,
-              detail: `${deltaPct > 0 ? "up" : "down"} ${Math.abs(Math.round(deltaPct))}% vs ${prev.sampledAt} (${prev.value} ${s.unit})`,
+              detail: `${deltaPct > 0 ? "up" : "down"} ${Math.abs(Math.round(deltaPct))}% vs ${prev.sampledAt} (${formatValue(prev.value)} ${s.unit})`,
               deltaPct: Math.round(deltaPct * 10) / 10,
             });
           }

@@ -2,13 +2,167 @@
   "lab": "NORTHGATE PATHOLOGY",
   "sampledAt": "2022-11-03",
   "values": [
-    { "markerId": "glucose", "value": 91.893, "unit": "mg/dL", "referenceRange": { "low": 70.271, "high": 99.1 } },
-    { "markerId": "total-cholesterol", "value": 189.483, "unit": "mg/dL", "referenceRange": { "low": null, "high": 201.084 } },
-    { "markerId": "ldl", "value": 112.143, "unit": "mg/dL", "referenceRange": { "low": null, "high": 116.01 } },
-    { "markerId": "hdl", "value": 54.138, "unit": "mg/dL", "referenceRange": { "low": 38.67, "high": null } },
-    { "markerId": "creatinine", "value": 0.9502, "unit": "mg/dL", "referenceRange": { "low": 0.7014, "high": 1.1991 } },
-    { "markerId": "hba1c", "value": 5.444, "unit": "%", "referenceRange": { "low": null, "high": 5.993 } },
-    { "markerId": "hemoglobin", "value": 14.8, "unit": "g/dL", "referenceRange": { "low": 13.5, "high": 17.5 } },
-    { "markerId": "ferritin", "value": 96, "unit": "ng/mL", "referenceRange": { "low": 30, "high": 400 } }
+    {
+      "markerId": "glucose",
+      "value": 91.8928,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": 70.271,
+        "high": 99.1001
+      }
+    },
+    {
+      "markerId": "total-cholesterol",
+      "value": 189.483,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": null,
+        "high": 201.084
+      }
+    },
+    {
+      "markerId": "ldl",
+      "value": 112.143,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": null,
+        "high": 116.01
+      }
+    },
+    {
+      "markerId": "hdl",
+      "value": 54.138,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": 38.67,
+        "high": null
+      }
+    },
+    {
+      "markerId": "creatinine",
+      "value": 0.9502,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": 0.7014,
+        "high": 1.1991
+      }
+    },
+    {
+      "markerId": "hba1c",
+      "value": 5.444,
+      "unit": "%",
+      "referenceRange": {
+        "low": null,
+        "high": 5.993
+      }
+    },
+    {
+      "markerId": "hemoglobin",
+      "value": 14.8,
+      "unit": "g/dL",
+      "referenceRange": {
+        "low": 13.5,
+        "high": 17.5
+      }
+    },
+    {
+      "markerId": "ferritin",
+      "value": 96,
+      "unit": "ng/mL",
+      "referenceRange": {
+        "low": 30,
+        "high": 400
+      }
+    },
+    {
+      "markerId": "ast",
+      "value": 24,
+      "unit": "U/L",
+      "referenceRange": {
+        "low": 10,
+        "high": 40
+      }
+    },
+    {
+      "markerId": "alp",
+      "value": 72,
+      "unit": "U/L",
+      "referenceRange": {
+        "low": 35,
+        "high": 105
+      }
+    },
+    {
+      "markerId": "albumin",
+      "value": 4.4,
+      "unit": "g/dL",
+      "referenceRange": {
+        "low": 3.5,
+        "high": 5.0
+      }
+    },
+    {
+      "markerId": "bun",
+      "value": 14.56,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": 7.0,
+        "high": 19.88
+      }
+    },
+    {
+      "markerId": "sodium",
+      "value": 141,
+      "unit": "mmol/L",
+      "referenceRange": {
+        "low": 135,
+        "high": 145
+      }
+    },
+    {
+      "markerId": "potassium",
+      "value": 4.1,
+      "unit": "mmol/L",
+      "referenceRange": {
+        "low": 3.5,
+        "high": 5.1
+      }
+    },
+    {
+      "markerId": "calcium",
+      "value": 9.4188,
+      "unit": "mg/dL",
+      "referenceRange": {
+        "low": 8.6172,
+        "high": 10.2204
+      }
+    },
+    {
+      "markerId": "wbc",
+      "value": 6.0,
+      "unit": "10³/µL",
+      "referenceRange": {
+        "low": 3.5,
+        "high": 8.8
+      }
+    },
+    {
+      "markerId": "platelets",
+      "value": 250,
+      "unit": "10³/µL",
+      "referenceRange": {
+        "low": 150,
+        "high": 400
+      }
+    },
+    {
+      "markerId": "vitamin-d",
+      "value": 24.8397,
+      "unit": "ng/mL",
+      "referenceRange": {
+        "low": 30.0481,
+        "high": 100.1603
+      }
+    }
   ]
 }

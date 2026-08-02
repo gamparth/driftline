@@ -36,6 +36,17 @@ function acme(): Layout {
     ["Triglycerides", "110", "mg/dL", "0 - 150"],
     ["Creatinine", "0.95", "mg/dL", "0.70 - 1.30"],
     ["ALT (SGPT)", "24", "U/L", "7 - 56"],
+    ["AST (SGOT)", "22", "U/L", "10 - 40"],
+    ["Alkaline Phosphatase", "78", "U/L", "44 - 121"],
+    ["Albumin", "4.4", "g/dL", "3.5 - 5.0"],
+    ["BUN", "14", "mg/dL", "7 - 20"],
+    ["Sodium", "140", "mmol/L", "135 - 145"],
+    ["Potassium", "4.2", "mmol/L", "3.5 - 5.2"],
+    ["Calcium", "9.4", "mg/dL", "8.6 - 10.2"],
+    ["Hemoglobin", "15.1", "g/dL", "13.5 - 17.5"],
+    ["WBC", "6.2", "K/uL", "4.0 - 11.0"],
+    ["Platelets", "245", "K/uL", "150 - 400"],
+    ["Vitamin D, 25-OH", "32", "ng/mL", "30 - 100"],
     ["TSH", "1.8", "mIU/L", "0.45 - 4.50"],
   ];
   const lines: Line[] = [
@@ -64,7 +75,7 @@ function acme(): Layout {
   ];
   rows.forEach((r, i) => {
     lines.push({
-      y: 610 - i * 20,
+      y: 610 - i * 19,
       size: 10,
       cells: [
         { text: r[0], x: 60 },
@@ -75,7 +86,7 @@ function acme(): Layout {
     });
   });
   lines.push({
-    y: 610 - rows.length * 20 - 30,
+    y: 610 - rows.length * 19 - 26,
     size: 8,
     cells: [{ text: "Results apply to the specimen tested. Synthetic document for testing.", x: 60 }],
   });
@@ -93,6 +104,16 @@ function northgate(): Layout {
     ["B-HbA1c", "36", "mmol/mol", "< 42"],
     ["B-Hemoglobin", "148", "g/L", "135 - 175"],
     ["S-Ferritin", "96", "µg/L", "30 - 400"],
+    ["S-AST", "24", "U/L", "10 - 40"],
+    ["S-ALP", "72", "U/L", "35 - 105"],
+    ["S-Albumin", "44", "g/L", "35 - 50"],
+    ["S-Urea", "5.2", "mmol/L", "2.5 - 7.1"],
+    ["S-Sodium", "141", "mmol/L", "135 - 145"],
+    ["S-Potassium", "4.1", "mmol/L", "3.5 - 5.1"],
+    ["S-Calcium", "2.35", "mmol/L", "2.15 - 2.55"],
+    ["B-Leukocytes", "6.0", "10^9/L", "3.5 - 8.8"],
+    ["B-Platelets", "250", "10^9/L", "150 - 400"],
+    ["S-Vitamin D", "62", "nmol/L", "75 - 250"],
   ];
   const lines: Line[] = [
     { y: 740, cells: [{ text: "NORTHGATE PATHOLOGY", x: 55 }], bold: true, size: 15 },
@@ -113,7 +134,7 @@ function northgate(): Layout {
   ];
   rows.forEach((r, i) => {
     lines.push({
-      y: 628 - i * 19,
+      y: 628 - i * 18,
       size: 10,
       cells: [
         { text: r[0], x: 55 },
@@ -137,6 +158,16 @@ function helix(): Layout {
     "TSH: 2.4 mIU/L (ref 0.45-4.50)",
     "Vitamin D, 25-OH: 22 ng/mL [L] (ref 30-100)",
     "Creatinine: 1.06 mg/dL (ref 0.70-1.30)",
+    "AST (SGOT): 28 U/L (ref 10-40)",
+    "Alkaline Phosphatase: 80 U/L (ref 44-121)",
+    "Albumin: 4.3 g/dL (ref 3.5-5.0)",
+    "BUN: 16 mg/dL (ref 7-20)",
+    "Sodium: 139 mmol/L (ref 135-145)",
+    "Potassium: 4.4 mmol/L (ref 3.5-5.2)",
+    "Calcium: 9.5 mg/dL (ref 8.6-10.2)",
+    "Hemoglobin: 14.6 g/dL (ref 13.5-17.5)",
+    "WBC: 6.8 K/uL (ref 4.0-11.0)",
+    "Platelets: 236 K/uL (ref 150-400)",
   ];
   const lines: Line[] = [
     { y: 735, cells: [{ text: "HELIX LABS", x: 64 }], bold: true, size: 17 },
@@ -146,7 +177,7 @@ function helix(): Layout {
     { y: 650, cells: [{ text: "RESULTS", x: 64 }], bold: true, size: 11 },
   ];
   rows.forEach((text, i) => {
-    lines.push({ y: 626 - i * 22, size: 11, cells: [{ text, x: 64 }] });
+    lines.push({ y: 626 - i * 20, size: 10, cells: [{ text, x: 64 }] });
   });
   return { slug: "helix-2024", lines };
 }
@@ -162,6 +193,17 @@ function meridian(): Layout {
     ["CREATININE", "1.42", "H", "mg/dL", "0.70-1.30"],
     ["ALT (SGPT)", "62", "H", "U/L", "7-56"],
     ["FERRITIN", "412", "H", "ng/mL", "30-400"],
+    ["AST (SGOT)", "48", "H", "U/L", "10-40"],
+    ["ALKALINE PHOSPHATASE", "96", "", "U/L", "44-121"],
+    ["ALBUMIN", "4.1", "", "g/dL", "3.5-5.0"],
+    ["BUN", "22", "H", "mg/dL", "7-20"],
+    ["SODIUM", "138", "", "mmol/L", "135-145"],
+    ["POTASSIUM", "4.6", "", "mmol/L", "3.5-5.2"],
+    ["CALCIUM", "9.6", "", "mg/dL", "8.6-10.2"],
+    ["HEMOGLOBIN", "14.2", "", "g/dL", "13.5-17.5"],
+    ["WBC", "7.4", "", "K/uL", "4.0-11.0"],
+    ["PLATELETS", "210", "", "K/uL", "150-400"],
+    ["VITAMIN D, 25-OH", "28", "L", "ng/mL", "30-100"],
   ];
   const lines: Line[] = [
     { y: 742, cells: [{ text: "MERIDIAN HEALTH LABORATORY", x: 50 }], bold: true, size: 14 },
@@ -183,7 +225,7 @@ function meridian(): Layout {
   ];
   rows.forEach((r, i) => {
     lines.push({
-      y: 632 - i * 20,
+      y: 632 - i * 18,
       size: 10,
       cells: [
         { text: r[0], x: 50 },
@@ -195,7 +237,7 @@ function meridian(): Layout {
     });
   });
   lines.push({
-    y: 632 - rows.length * 20 - 28,
+    y: 632 - rows.length * 18 - 24,
     size: 8,
     cells: [{ text: "H = above reference, L = below reference. Synthetic document for testing.", x: 50 }],
   });
