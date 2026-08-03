@@ -77,7 +77,7 @@ export default function Landing() {
           </div>
         </section>
 
-        <section className="bg-white shadow-[0_16px_44px_rgba(25,33,43,0.045)]">
+        <section className="bg-white">
           <div className="mx-auto max-w-6xl px-6 py-20 md:px-10 md:py-28">
             <div className="mb-12 max-w-2xl">
               <Label>Workflow</Label>
@@ -108,7 +108,7 @@ export default function Landing() {
           </div>
         </section>
 
-        <section className="bg-[#f0f8f5] shadow-[0_16px_44px_rgba(25,33,43,0.045)]">
+        <section className="bg-[#f0f8f5]">
           <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-2 md:px-10 md:py-28">
             <div>
               <Label>Privacy is the architecture</Label>

@@ -116,7 +116,6 @@ body {
 }
 
 .soft-section {
-  box-shadow: var(--shadow-soft-divider);
   position: relative;
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import { PRODUCT_STORAGE_PREFIX } from "@/lib/product";
 
 export type WorkspaceMode = "real" | "demo";
@@ -27,33 +27,28 @@ export function writeWorkspaceMode(mode: WorkspaceMode): void {
 }
 
 export function useWorkspaceMode(): [WorkspaceMode, (mode: WorkspaceMode) => void] {
-  const [mode, setModeState] = useState<WorkspaceMode>("real");
-
-  useEffect(() => {
-    queueMicrotask(() => setModeState(readWorkspaceMode()));
-
-    function handleCustom(event: Event) {
-      setModeState((event as CustomEvent<WorkspaceMode>).detail);
-    }
-
-    function handleStorage(event: StorageEvent) {
-      if (event.key === STORAGE_KEY) {
-        setModeState(event.newValue === "demo" ? "demo" : "real");
-      }
-    }
-
-    window.addEventListener(EVENT_NAME, handleCustom);
-    window.addEventListener("storage", handleStorage);
-    return () => {
-      window.removeEventListener(EVENT_NAME, handleCustom);
-      window.removeEventListener("storage", handleStorage);
-    };
-  }, []);
+  const mode = useSyncExternalStore(subscribeWorkspaceMode, readWorkspaceMode, defaultWorkspaceMode);
 
   const setMode = useCallback((next: WorkspaceMode) => {
-    setModeState(next);
     writeWorkspaceMode(next);
   }, []);
 
   return [mode, setMode];
+}
+
+function defaultWorkspaceMode(): WorkspaceMode {
+  return "real";
+}
+
+function subscribeWorkspaceMode(onStoreChange: () => void): () => void {
+  function handleStorage(event: StorageEvent) {
+    if (event.key === STORAGE_KEY) onStoreChange();
+  }
+
+  window.addEventListener(EVENT_NAME, onStoreChange);
+  window.addEventListener("storage", handleStorage);
+    return () => {
+      window.removeEventListener(EVENT_NAME, onStoreChange);
+      window.removeEventListener("storage", handleStorage);
+    };
 }

@@ -23,7 +23,7 @@ export function WorkspaceModeToggle() {
           aria-pressed={mode === item.value}
           className={`relative px-0 py-2 font-mono text-[10px] uppercase tracking-[0.12em] transition-colors duration-200 after:absolute after:inset-x-0 after:-bottom-px after:h-px after:rounded-full after:content-[''] md:rounded-full md:px-3 md:py-1.5 md:after:hidden ${
             mode === item.value
-              ? "text-ink after:bg-ink md:brand-gradient md:text-white md:shadow-sm"
+              ? "text-ink after:bg-ink md:bg-[linear-gradient(135deg,#00a995,#4c57d8_54%,#ff7a59)] md:text-white md:shadow-sm"
               : "text-muted after:bg-transparent hover:text-ink md:hover:bg-brand-soft"
           }`}
         >

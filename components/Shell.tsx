@@ -15,7 +15,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
 export function Disclaimer() {
   return (
-    <footer className="bg-[#eaf7f2] shadow-[0_-18px_50px_rgba(25,33,43,0.06)]">
+    <footer className="bg-[#eaf7f2]">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1fr_auto] md:px-10 md:py-12">
         <div>
           <Logo />
