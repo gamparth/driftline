@@ -17,6 +17,7 @@ import {
   formatRange,
   formatValue,
 } from "@/lib/format";
+import { PRODUCT_NAME } from "@/lib/product";
 
 export default function MarkerPage() {
   return (
@@ -64,6 +65,7 @@ function MarkerDetail() {
             body="It may have been wiped, or this link may be stale."
             actionHref="/timeline"
             actionLabel="Back to overview"
+            titleAs="h1"
           />
         </Section>
       </Shell>
@@ -265,7 +267,7 @@ function plainReading(
   unit: string,
 ): string {
   if (!range || status === "unknown") {
-    return "This report printed no reference range for this marker, so Vitals has nothing to compare the value against.";
+    return `This report printed no reference range for this marker, so ${PRODUCT_NAME} has nothing to compare the value against.`;
   }
   if (status === "in-range") {
     return `Inside the ${formatRange(range)} ${unit} range printed on this report.`;

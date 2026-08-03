@@ -20,7 +20,7 @@ export const STATUS_META: Record<MarkerStatus, { label: string; dot: string; tex
     label: "No range printed",
     dot: "bg-muted",
     text: "text-muted",
-    chip: "border-line bg-surface-2 text-muted",
+    chip: "border-line bg-white text-muted",
   },
 };
 
@@ -73,7 +73,7 @@ export function RangeMeter({
   if (!range) {
     return (
       <div className="flex items-center gap-3">
-        <div className="h-1.5 flex-1 rounded-full bg-surface-2" />
+        <div className="h-1.5 flex-1 rounded-full bg-[#dce8e4]" />
         <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
           No range printed
         </span>
@@ -110,13 +110,13 @@ export function RangeMeter({
 
   return (
     <div>
-      <div className="relative h-1.5 rounded-full bg-surface-2">
+      <div className="relative h-2 rounded-full bg-[#dce8e4]">
         <div
           className="absolute inset-y-0 rounded-full bg-ok-soft"
           style={{ left: `${bandStart}%`, width: `${Math.max(bandEnd - bandStart, 1)}%` }}
         />
         <div
-          className={`absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-surface ${
+          className={`absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-sm ${
             outside ? "bg-alert" : "bg-ok"
           }`}
           style={{ left: `${valuePct}%` }}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PageHeader, Section, Shell } from "@/components/Shell";
 import { MODEL, clearApiKey, getApiKey, setApiKey, verifyApiKey } from "@/lib/llm/client";
+import { PRODUCT_NAME } from "@/lib/product";
 
 type Status =
   | { kind: "idle" }
@@ -17,7 +18,7 @@ export default function SettingsPage() {
   const [status, setStatus] = useState<Status>({ kind: "idle" });
 
   useEffect(() => {
-    setSaved(!!getApiKey());
+    queueMicrotask(() => setSaved(!!getApiKey()));
   }, []);
 
   async function save() {
@@ -39,9 +40,9 @@ export default function SettingsPage() {
     <Shell>
       <PageHeader eyebrow="Configuration" title="Settings">
         <p className="text-sm leading-relaxed text-muted">
-          Vitals reads standard lab layouts and computes every flag without a key. A key adds two
-          optional things: reading layouts the built-in parser can&apos;t, and drafting questions
-          from flagged markers.
+          {PRODUCT_NAME} reads standard lab layouts and computes every flag without a key. A key
+          adds two optional things: reading layouts the built-in parser can&apos;t, and drafting
+          questions from flagged markers.
         </p>
       </PageHeader>
 
@@ -108,8 +109,8 @@ export default function SettingsPage() {
               <li>
                 <strong className="font-medium text-ink">Direct from your browser.</strong> Calls
                 go straight to <span className="font-mono text-ink">api.anthropic.com</span> using{" "}
-                <span className="font-mono text-ink">{MODEL}</span>. Vitals has no server, so
-                there is nothing in between to log anything.
+                <span className="font-mono text-ink">{MODEL}</span>. {PRODUCT_NAME} has no server,
+                so there is nothing in between to log anything.
               </li>
               <li>
                 <strong className="font-medium text-ink">Minimal payloads.</strong> Extraction
@@ -121,14 +122,6 @@ export default function SettingsPage() {
                 request confirms the key works, so a bad key fails here rather than mid-upload.
               </li>
             </ul>
-          </div>
-
-          <div className="mt-10 rounded-xl border border-line bg-surface p-6 md:p-8">
-            <h2 className="font-display text-lg text-ink">Appearance</h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted">
-              Light and dark are both first-class. Use the toggle in the header — the choice is
-              remembered in this browser and applied before the page paints.
-            </p>
           </div>
 
           <p className="mt-10 text-sm text-muted">

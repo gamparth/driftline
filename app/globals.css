@@ -1,61 +1,42 @@
 @import "tailwindcss";
 
 /*
- * Vitals design language.
+ * Driftline design language.
  *
- * Light-first and paper-like, the way clinical records and the serious
- * consumer-health products read: warm off-white, near-black ink, generous
- * whitespace, hairline rules instead of boxes. Colour is functional — it means
- * "inside the printed range", "outside it", or "worth a look" and is used
- * nowhere else. Dark mode is a real second theme, not an inversion.
+ * Bright clinical workspace: warm canvas, crisp cards, graphite text, and
+ * lively medical accents. The app has one intentional theme.
  */
 
 :root {
-  --bg: #faf9f6;
+  --bg: #f8fbf7;
   --surface: #ffffff;
-  --surface-2: #f3f1ec;
-  --ink: #15181b;
-  --ink-soft: #3d444b;
-  --muted: #6a7178;
-  --hairline: rgba(21, 24, 27, 0.1);
-  --hairline-strong: rgba(21, 24, 27, 0.18);
+  --surface-2: #eef8f4;
+  --ink: #19212b;
+  --ink-soft: #405062;
+  --muted: #6f7d8c;
+  --hairline: rgba(25, 33, 43, 0.07);
+  --hairline-strong: rgba(25, 33, 43, 0.14);
 
-  --brand: #0d6a58;
-  --brand-soft: rgba(13, 106, 88, 0.1);
+  --brand: #009f8c;
+  --brand-soft: rgba(0, 159, 140, 0.12);
+  --accent: #4c57d8;
+  --accent-soft: rgba(76, 87, 216, 0.11);
 
-  --ok: #10715a;
-  --ok-soft: rgba(16, 113, 90, 0.12);
-  --warn: #9a5b00;
-  --warn-soft: rgba(154, 91, 0, 0.12);
-  --alert: #ad2a20;
-  --alert-soft: rgba(173, 42, 32, 0.1);
+  --ok: #16896f;
+  --ok-soft: rgba(22, 137, 111, 0.12);
+  --warn: #bd6b00;
+  --warn-soft: rgba(245, 151, 42, 0.16);
+  --alert: #d94a4a;
+  --alert-soft: rgba(217, 74, 74, 0.12);
 
-  --shadow-card: 0 1px 2px rgba(21, 24, 27, 0.05);
-  --shadow-lift: 0 2px 8px rgba(21, 24, 27, 0.07);
-}
+  --coral: #ff7a59;
+  --sun: #f5c84b;
+  --lavender: #dfe3ff;
+  --mint: #c8f4e6;
 
-:root[data-theme="dark"] {
-  --bg: #0d1012;
-  --surface: #14181b;
-  --surface-2: #1b2024;
-  --ink: #eceef0;
-  --ink-soft: #c3c9ce;
-  --muted: #8d959c;
-  --hairline: rgba(255, 255, 255, 0.11);
-  --hairline-strong: rgba(255, 255, 255, 0.2);
-
-  --brand: #4ecfab;
-  --brand-soft: rgba(78, 207, 171, 0.14);
-
-  --ok: #4ecfab;
-  --ok-soft: rgba(78, 207, 171, 0.14);
-  --warn: #edad4c;
-  --warn-soft: rgba(237, 173, 76, 0.14);
-  --alert: #ff7a6e;
-  --alert-soft: rgba(255, 122, 110, 0.14);
-
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-lift: 0 2px 10px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 1px 2px rgba(25, 33, 43, 0.04), 0 12px 34px rgba(25, 33, 43, 0.07);
+  --shadow-lift: 0 20px 48px rgba(25, 33, 43, 0.13);
+  --shadow-soft-divider: 0 18px 50px rgba(25, 33, 43, 0.07);
 }
 
 @theme inline {
@@ -70,6 +51,8 @@
 
   --color-brand: var(--brand);
   --color-brand-soft: var(--brand-soft);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
   --color-ok: var(--ok);
   --color-ok-soft: var(--ok-soft);
   --color-warn: var(--warn);
@@ -77,7 +60,7 @@
   --color-alert: var(--alert);
   --color-alert-soft: var(--alert-soft);
 
-  --font-display: var(--font-fraunces);
+  --font-display: var(--font-inter);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains);
 }
@@ -90,16 +73,17 @@ html {
   color-scheme: light;
 }
 
-html[data-theme="dark"] {
-  color-scheme: dark;
-}
-
 body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   font-feature-settings: "cv05" 1, "ss01" 1;
   -webkit-font-smoothing: antialiased;
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0) 28rem),
+    linear-gradient(135deg, rgba(200, 244, 230, 0.72), transparent 24rem),
+    linear-gradient(225deg, rgba(223, 227, 255, 0.85), transparent 30rem);
+  background-attachment: fixed;
 }
 
 ::selection {
@@ -112,10 +96,32 @@ body {
   border-radius: 4px;
 }
 
-/* Display type: Fraunces at a low optical size reads clinical rather than editorial. */
 .font-display {
-  font-variation-settings: "SOFT" 0, "WONK" 0, "opsz" 40;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
+}
+
+.font-display {
+  font-family: var(--font-fraunces), var(--font-inter), ui-serif, Georgia, serif;
+}
+
+.brand-gradient {
+  background-image: linear-gradient(135deg, #00a995, #4c57d8 54%, #ff7a59);
+}
+
+.page-band {
+  background:
+    linear-gradient(90deg, rgba(0, 159, 140, 0.1), transparent 45%),
+    linear-gradient(270deg, rgba(255, 122, 89, 0.12), transparent 42%),
+    var(--surface);
+}
+
+.soft-section {
+  box-shadow: var(--shadow-soft-divider);
+  position: relative;
+}
+
+.rounded-xl {
+  border-radius: 8px;
 }
 
 .tabular {

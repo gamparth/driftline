@@ -1,0 +1,9 @@
+export const PRODUCT_NAME = "Driftline";
+export const PRODUCT_TAGLINE = "Health records timeline";
+export const PRODUCT_EXPORT_FORMAT = "driftline-record";
+export const MARKLINE_EXPORT_FORMAT = "markline-record";
+export const LABLINE_EXPORT_FORMAT = "labline-record";
+export const LEGACY_EXPORT_FORMAT = "vitals-record";
+export const PRODUCT_STORAGE_PREFIX = "driftline";
+export const MARKLINE_STORAGE_PREFIX = "markline";
+export const LABLINE_STORAGE_PREFIX = "labline";

@@ -1,6 +1,13 @@
 import { z } from "zod";
 import { LabValueSchema } from "@/lib/engine/types";
 import type { StoredReport } from "@/lib/storage/db";
+import {
+  LABLINE_EXPORT_FORMAT,
+  LEGACY_EXPORT_FORMAT,
+  MARKLINE_EXPORT_FORMAT,
+  PRODUCT_EXPORT_FORMAT,
+  PRODUCT_NAME,
+} from "@/lib/product";
 
 /**
  * Local export and import. A record you can only ever read inside one browser
@@ -8,7 +15,7 @@ import type { StoredReport } from "@/lib/storage/db";
  * reads it back. It is a download, not an upload: nothing is transmitted.
  */
 
-export const EXPORT_FORMAT = "vitals-record";
+export const EXPORT_FORMAT = PRODUCT_EXPORT_FORMAT;
 export const EXPORT_VERSION = 1;
 
 const NormalizedValueSchema = LabValueSchema.extend({
@@ -28,7 +35,12 @@ const StoredReportSchema = z.object({
 });
 
 export const ExportBundleSchema = z.object({
-  format: z.literal(EXPORT_FORMAT),
+  format: z.union([
+    z.literal(EXPORT_FORMAT),
+    z.literal(MARKLINE_EXPORT_FORMAT),
+    z.literal(LABLINE_EXPORT_FORMAT),
+    z.literal(LEGACY_EXPORT_FORMAT),
+  ]),
   version: z.number().int().positive(),
   exportedAt: z.string(),
   reports: z.array(StoredReportSchema),
@@ -61,15 +73,15 @@ export function parseImportBundle(text: string): ImportResult {
   if (!result.success) {
     const shape = (parsed as { format?: unknown })?.format;
     if (shape !== undefined && shape !== EXPORT_FORMAT) {
-      return { status: "error", reason: "That file isn't a Vitals export." };
+      return { status: "error", reason: `That file isn't a ${PRODUCT_NAME} export.` };
     }
-    return { status: "error", reason: "That export is missing fields Vitals needs." };
+    return { status: "error", reason: `That export is missing fields ${PRODUCT_NAME} needs.` };
   }
 
   if (result.data.version > EXPORT_VERSION) {
     return {
       status: "error",
-      reason: `That export was written by a newer version of Vitals (v${result.data.version}).`,
+      reason: `That export was written by a newer version of ${PRODUCT_NAME} (v${result.data.version}).`,
     };
   }
 

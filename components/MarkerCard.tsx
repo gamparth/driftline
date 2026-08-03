@@ -12,11 +12,13 @@ export function MarkerCard({ insight }: { insight: MarkerInsight }) {
   return (
     <Link
       href={markerHref(insight)}
-      className="group flex flex-col rounded-xl border border-line bg-surface p-5 transition-all duration-200 hover:border-line-strong hover:shadow-[var(--shadow-lift)]"
+      className="group flex flex-col rounded-xl border border-line bg-white p-5 shadow-[var(--shadow-card)] transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/35 hover:shadow-[var(--shadow-lift)]"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="truncate font-display text-base text-ink">{insight.markerLabel}</p>
+          <p className="truncate font-display text-lg font-semibold text-ink">
+            {insight.markerLabel}
+          </p>
           <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
             {insight.sampleCount} sample{insight.sampleCount === 1 ? "" : "s"}
           </p>
@@ -44,7 +46,7 @@ export function MarkerCard({ insight }: { insight: MarkerInsight }) {
         />
       </div>
 
-      <div className="mt-4 -mx-1">
+      <div className="mt-4 -mx-1 rounded-lg bg-bg p-2">
         <Sparkline series={insight.series} />
       </div>
 

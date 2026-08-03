@@ -10,6 +10,7 @@ import { getApiKey } from "@/lib/llm/client";
 import { generateQuestions } from "@/lib/llm/questions";
 import { loadQuestions, saveQuestions, type StoredQuestions } from "@/lib/storage/db";
 import { describeGap, formatDate, formatPercent, formatRange, formatValue } from "@/lib/format";
+import { PRODUCT_NAME } from "@/lib/product";
 
 /**
  * The page you print and take to the appointment: what's outside range, what
@@ -17,16 +18,18 @@ import { describeGap, formatDate, formatPercent, formatRange, formatValue } from
  * attached so nothing has to be recalled from memory.
  */
 export default function VisitSummaryPage() {
-  const { state, attention, summary, latestDraw, reports } = useVitals();
+  const { state, attention, summary, latestDraw, reports, mode } = useVitals();
   const [stored, setStored] = useState<StoredQuestions | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [keyPresent, setKeyPresent] = useState(false);
 
   useEffect(() => {
-    setKeyPresent(!!getApiKey());
-    void loadQuestions().then((q) => setStored(q ?? null));
-  }, []);
+    queueMicrotask(() => {
+      setKeyPresent(!!getApiKey());
+      void loadQuestions(mode).then((q) => setStored(q ?? null));
+    });
+  }, [mode]);
 
   async function generate() {
     const apiKey = getApiKey();
@@ -41,8 +44,8 @@ export default function VisitSummaryPage() {
       return;
     }
     const generatedAt = new Date().toISOString();
-    await saveQuestions(result.questions, generatedAt);
-    setStored({ id: "latest", generatedAt, questions: result.questions });
+    await saveQuestions(result.questions, generatedAt, mode);
+    setStored({ id: `latest:${mode}`, generatedAt, questions: result.questions });
   }
 
   if (state === "loading") {
@@ -61,9 +64,10 @@ export default function VisitSummaryPage() {
         <Section>
           <EmptyState
             title="Nothing to summarise yet"
-            body="Add a lab report and Vitals will build a one-page summary you can print for your next appointment."
-            actionHref="/upload"
-            actionLabel="Add a report"
+            body={`Add a lab report and ${PRODUCT_NAME} will build a one-page summary you can print for your next appointment.`}
+            actionHref={mode === "demo" ? "/demo" : "/upload"}
+            actionLabel={mode === "demo" ? "Load demo" : "Add a report"}
+            titleAs="h1"
           />
         </Section>
       </Shell>
@@ -222,8 +226,8 @@ export default function VisitSummaryPage() {
 
           <footer className="border-t border-line pt-5">
             <p className="text-xs leading-relaxed text-muted">
-              Prepared by Vitals from lab reports supplied by the patient. Flags are arithmetic
-              against the reference range printed on each report — not a diagnosis, an
+              Prepared by {PRODUCT_NAME} from lab reports supplied by the patient. Flags are
+              arithmetic against the reference range printed on each report — not a diagnosis, an
               interpretation, or a clinical recommendation.
             </p>
           </footer>

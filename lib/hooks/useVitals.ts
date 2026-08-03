@@ -16,11 +16,12 @@ import {
 } from "@/lib/engine/insights";
 import type { DriftFlag, MarkerSeries } from "@/lib/engine/types";
 import {
-  listReports,
+  listReportsForMode,
   listReviewItems,
   type ReviewItem,
   type StoredReport,
 } from "@/lib/storage/db";
+import { useWorkspaceMode, type WorkspaceMode } from "@/lib/hooks/useWorkspaceMode";
 
 export type LoadState = "loading" | "empty" | "ready";
 
@@ -35,24 +36,26 @@ export interface VitalsData {
   panels: PanelRollup[];
   latestDraw: DrawSummary | null;
   summary: RecordSummary;
+  mode: WorkspaceMode;
   reload: () => Promise<void>;
 }
 
 /** Reads storage once, then derives every view the UI needs from it. */
 export function useVitals(): VitalsData {
+  const [mode] = useWorkspaceMode();
   const [state, setState] = useState<LoadState>("loading");
   const [reports, setReports] = useState<StoredReport[]>([]);
   const [review, setReview] = useState<ReviewItem[]>([]);
 
   const reload = useCallback(async () => {
-    const [stored, reviewItems] = await Promise.all([listReports(), listReviewItems()]);
+    const [stored, reviewItems] = await Promise.all([listReportsForMode(mode), listReviewItems()]);
     setReports(stored);
-    setReview(reviewItems);
-    setState(stored.length === 0 && reviewItems.length === 0 ? "empty" : "ready");
-  }, []);
+    setReview(mode === "real" ? reviewItems : []);
+    setState(stored.length === 0 && (mode === "demo" || reviewItems.length === 0) ? "empty" : "ready");
+  }, [mode]);
 
   useEffect(() => {
-    void reload();
+    queueMicrotask(() => void reload());
   }, [reload]);
 
   const derived = useMemo(() => {
@@ -70,5 +73,5 @@ export function useVitals(): VitalsData {
     };
   }, [reports]);
 
-  return { state, reports, review, reload, ...derived };
+  return { state, reports, review, mode, reload, ...derived };
 }

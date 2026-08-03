@@ -2,12 +2,19 @@
 
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { Label, Section, Shell } from "@/components/Shell";
+import { Label, PageHeader, Section, Shell } from "@/components/Shell";
 import { EmptyState, LoadingState } from "@/components/States";
 import { useVitals } from "@/lib/hooks/useVitals";
 import { buildExportBundle, downloadFile, parseImportBundle, toCsv } from "@/lib/exchange";
-import { deleteReport, putReport, wipeAll } from "@/lib/storage/db";
+import {
+  clearReviewItems,
+  deleteQuestions,
+  deleteReport,
+  deleteReportsForMode,
+  putReport,
+} from "@/lib/storage/db";
 import { formatDate } from "@/lib/format";
+import { PRODUCT_NAME } from "@/lib/product";
 
 const SOURCE_LABEL: Record<string, string> = {
   heuristic: "Built-in parser",
@@ -16,7 +23,7 @@ const SOURCE_LABEL: Record<string, string> = {
 };
 
 export default function ReportsPage() {
-  const { state, reports, summary, reload } = useVitals();
+  const { state, reports, summary, reload, mode } = useVitals();
   const [confirmWipe, setConfirmWipe] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -28,12 +35,16 @@ export default function ReportsPage() {
 
   function exportJson() {
     const bundle = buildExportBundle(reports, new Date().toISOString());
-    downloadFile(`vitals-record-${stamp()}.json`, JSON.stringify(bundle, null, 2), "application/json");
-    setNotice("Record saved to your downloads.");
+    downloadFile(
+      `driftline-${mode}-record-${stamp()}.json`,
+      JSON.stringify(bundle, null, 2),
+      "application/json",
+    );
+    setNotice(`${mode === "demo" ? "Demo" : "Real"} record saved to your downloads.`);
   }
 
   function exportCsv() {
-    downloadFile(`vitals-measurements-${stamp()}.csv`, toCsv(reports), "text/csv");
+    downloadFile(`driftline-${mode}-measurements-${stamp()}.csv`, toCsv(reports), "text/csv");
     setNotice("CSV saved to your downloads.");
   }
 
@@ -48,7 +59,11 @@ export default function ReportsPage() {
     let added = 0;
     let skipped = 0;
     for (const report of result.reports) {
-      (await putReport(report)) ? added++ : skipped++;
+      if (await putReport(report)) {
+        added++;
+      } else {
+        skipped++;
+      }
     }
     await reload();
     setNotice(
@@ -69,16 +84,16 @@ export default function ReportsPage() {
 
   return (
     <Shell>
-      <div className="border-b border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-          <Label>Your data</Label>
-          <h1 className="mt-3 font-display text-3xl text-ink md:text-4xl">Manage record</h1>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted">
-            Everything here lives in this browser only. Export it to a file you keep, import it
-            into another browser, remove a single report, or delete all of it.
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow={mode === "demo" ? "Demo data" : "Your data"}
+        title={mode === "demo" ? "Manage demo record" : "Manage real record"}
+      >
+        <p className="text-sm leading-relaxed text-muted">
+          {mode === "demo"
+            ? "This view contains sample reports only. Clearing it never touches your real record."
+            : "Everything here lives in this browser only. Export it to a file you keep, import it into another browser, remove a single report, or delete all of it."}
+        </p>
+      </PageHeader>
 
       <Section>
         {notice ? (
@@ -98,21 +113,23 @@ export default function ReportsPage() {
             disabled={reports.length === 0}
             className="rounded-full border border-line px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-ink transition-colors duration-200 hover:border-line-strong disabled:opacity-40"
           >
-            Export record (JSON)
+            Export {mode} record
           </button>
           <button
             onClick={exportCsv}
             disabled={reports.length === 0}
             className="rounded-full border border-line px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-ink transition-colors duration-200 hover:border-line-strong disabled:opacity-40"
           >
-            Export measurements (CSV)
+            Export CSV
           </button>
-          <button
-            onClick={() => fileInput.current?.click()}
-            className="rounded-full border border-line px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-muted transition-colors duration-200 hover:border-line-strong hover:text-ink"
-          >
-            Import a record
-          </button>
+          {mode === "real" ? (
+            <button
+              onClick={() => fileInput.current?.click()}
+              className="rounded-full border border-line px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-muted transition-colors duration-200 hover:border-line-strong hover:text-ink"
+            >
+              Import a record
+            </button>
+          ) : null}
           <input
             ref={fileInput}
             type="file"
@@ -137,10 +154,14 @@ export default function ReportsPage() {
           {reports.length === 0 ? (
             <div className="mt-8">
               <EmptyState
-                title="No reports stored"
-                body="Add a lab-report PDF, or import a record you exported earlier."
-                actionHref="/upload"
-                actionLabel="Add a report"
+                title={mode === "demo" ? "No demo reports loaded" : "No reports stored"}
+                body={
+                  mode === "demo"
+                    ? "Load the sample PDFs from Demo to populate this workspace."
+                    : "Add a lab-report PDF, or import a record you exported earlier."
+                }
+                actionHref={mode === "demo" ? "/demo" : "/upload"}
+                actionLabel={mode === "demo" ? "Open demo" : "Add a report"}
               />
             </div>
           ) : (
@@ -182,24 +203,32 @@ export default function ReportsPage() {
         </div>
 
         <div className="mt-16 rounded-xl border border-line bg-surface p-6 md:p-8">
-          <h2 className="font-display text-lg text-ink">Delete everything</h2>
+          <h2 className="font-display text-lg text-ink">
+            {mode === "demo" ? "Clear demo data" : "Delete real record"}
+          </h2>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
-            Empties every report, the review queue, and any saved questions from this browser.
-            Immediate and irreversible — Vitals holds no copy anywhere else, so export first if you
-            want to keep the record.
+            {mode === "demo"
+              ? "Removes sample reports and demo questions from this browser. Your real record stays untouched."
+              : `Empties every real report, the review queue, and saved real-mode questions from this browser. Immediate and irreversible — ${PRODUCT_NAME} holds no copy anywhere else, so export first if you want to keep the record.`}
           </p>
           {confirmWipe ? (
             <div className="mt-6 flex flex-wrap items-center gap-4">
               <button
                 onClick={async () => {
-                  await wipeAll();
+                  const removed = await deleteReportsForMode(mode);
+                  await deleteQuestions(mode);
+                  if (mode === "real") await clearReviewItems();
                   setConfirmWipe(false);
-                  setNotice("All local data deleted.");
+                  setNotice(
+                    mode === "demo"
+                      ? `Cleared ${removed} demo report${removed === 1 ? "" : "s"}.`
+                      : `Deleted ${removed} real report${removed === 1 ? "" : "s"}.`,
+                  );
                   await reload();
                 }}
                 className="rounded-full bg-alert px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white transition-opacity duration-200 hover:opacity-90"
               >
-                Yes, delete everything
+                {mode === "demo" ? "Yes, clear demo" : "Yes, delete real record"}
               </button>
               <button
                 onClick={() => setConfirmWipe(false)}
@@ -214,13 +243,13 @@ export default function ReportsPage() {
               disabled={reports.length === 0}
               className="mt-6 rounded-full border border-alert/40 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-alert transition-colors duration-200 hover:bg-alert-soft disabled:opacity-40"
             >
-              Wipe all data
+              {mode === "demo" ? "Clear demo data" : "Wipe real data"}
             </button>
           )}
         </div>
 
         <p className="mt-10 text-sm text-muted">
-          Looking for the API key or theme?{" "}
+          Looking for the API key?{" "}
           <Link href="/settings" className="text-brand underline underline-offset-4">
             Settings
           </Link>

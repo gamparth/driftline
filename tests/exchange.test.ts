@@ -55,11 +55,29 @@ describe("export / import round trip", () => {
     expect(result.reason).toMatch(/valid JSON/i);
   });
 
-  it("rejects a JSON file that isn't a Vitals export", () => {
+  it("rejects a JSON file that isn't a Driftline export", () => {
     const result = parseImportBundle(JSON.stringify({ format: "something-else", data: [] }));
     expect(result.status).toBe("error");
     if (result.status !== "error") throw new Error("expected error");
-    expect(result.reason).toMatch(/isn't a Vitals export/i);
+    expect(result.reason).toMatch(/isn't a Driftline export/i);
+  });
+
+  it("imports interim Markline exports", () => {
+    const bundle = buildExportBundle([report("a", "2021-06-12")], "2026-08-02T10:00:00.000Z");
+    const result = parseImportBundle(JSON.stringify({ ...bundle, format: "markline-record" }));
+    expect(result.status).toBe("ok");
+  });
+
+  it("imports legacy Vitals exports", () => {
+    const bundle = buildExportBundle([report("a", "2021-06-12")], "2026-08-02T10:00:00.000Z");
+    const result = parseImportBundle(JSON.stringify({ ...bundle, format: "vitals-record" }));
+    expect(result.status).toBe("ok");
+  });
+
+  it("imports interim LabLine exports", () => {
+    const bundle = buildExportBundle([report("a", "2021-06-12")], "2026-08-02T10:00:00.000Z");
+    const result = parseImportBundle(JSON.stringify({ ...bundle, format: "labline-record" }));
+    expect(result.status).toBe("ok");
   });
 
   it("rejects an export written by a newer version", () => {

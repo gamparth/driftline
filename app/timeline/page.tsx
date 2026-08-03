@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Label, Section, Shell } from "@/components/Shell";
-import { EmptyState, LoadingState } from "@/components/States";
+import { LoadingState } from "@/components/States";
 import { MarkerCard, markerHref } from "@/components/MarkerCard";
 import { StatusChip } from "@/components/Status";
 import { useVitals } from "@/lib/hooks/useVitals";
@@ -14,10 +15,18 @@ type Filter = "all" | "attention" | "out-of-range";
 type Sort = "attention" | "name" | "recent";
 
 export default function OverviewPage() {
-  const { state, reports, insights, attention, panels, latestDraw, summary, review } = useVitals();
+  const { state, reports, insights, attention, panels, latestDraw, summary, mode } = useVitals();
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("attention");
+
+  const shouldRedirect = state !== "loading" && (state === "empty" || insights.length === 0);
+
+  useEffect(() => {
+    if (!shouldRedirect) return;
+    router.replace(mode === "demo" ? "/demo" : "/upload");
+  }, [mode, router, shouldRedirect]);
 
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -54,20 +63,11 @@ export default function OverviewPage() {
     );
   }
 
-  if (state === "empty" || insights.length === 0) {
+  if (shouldRedirect) {
     return (
       <Shell>
         <Section>
-          <EmptyState
-            title="Nothing to show yet"
-            body={
-              review.length > 0
-                ? "Your reports are stored, but no markers were read from them. The upload page has the review queue."
-                : "Add a lab-report PDF and Vitals will read it into a timeline — what's outside range, what's moving, and what to ask about."
-            }
-            actionHref="/upload"
-            actionLabel={review.length > 0 ? "Open review queue" : "Add a report"}
-          />
+          <LoadingState rows={2} />
         </Section>
       </Shell>
     );
@@ -76,14 +76,14 @@ export default function OverviewPage() {
   return (
     <Shell>
       {/* The read on the record, stated before any table. */}
-      <div className="border-b border-line bg-surface">
+      <div className="page-band soft-section">
         <div className="mx-auto max-w-6xl px-6 py-14 md:px-10 md:py-16">
           <Label>Your record</Label>
           <h1 className="mt-4 max-w-3xl font-display text-3xl leading-[1.1] text-ink md:text-[2.6rem]">
             {headline(summary.outOfRange, attention.length)}
           </h1>
 
-          <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-4">
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Tile label="Markers tracked" value={String(summary.markers)} />
             <Tile
               label="Outside range"
@@ -118,19 +118,19 @@ export default function OverviewPage() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/summary"
-              className="rounded-full bg-brand px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white transition-opacity duration-200 hover:opacity-90"
+              className="brand-gradient rounded-full px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-white shadow-[var(--shadow-card)] transition-transform duration-200 hover:-translate-y-0.5"
             >
               Visit summary
             </Link>
             <Link
               href="/upload"
-              className="rounded-full border border-line px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-ink transition-colors duration-200 hover:border-line-strong"
+              className="rounded-full border border-line bg-white px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink shadow-[var(--shadow-card)] transition-colors duration-200 hover:bg-brand-soft"
             >
               Add reports
             </Link>
             <Link
               href="/reports"
-              className="rounded-full border border-line px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-muted transition-colors duration-200 hover:border-line-strong hover:text-ink"
+              className="rounded-full border border-line bg-white px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted shadow-[var(--shadow-card)] transition-colors duration-200 hover:bg-accent-soft hover:text-ink"
             >
               Manage data
             </Link>
@@ -151,7 +151,7 @@ export default function OverviewPage() {
               Ordered by how far outside the printed range each value sits and how much it moved.
               This is arithmetic, not triage — your doctor decides what matters.
             </p>
-            <ul className="mt-6 divide-y divide-[var(--hairline)] overflow-hidden rounded-xl border border-line bg-surface">
+            <ul className="mt-6 divide-y divide-[var(--hairline)] overflow-hidden rounded-xl bg-white shadow-[var(--shadow-card)] ring-1 ring-black/[0.04]">
               {attention.slice(0, 8).map((insight) => (
                 <AttentionRow key={`${insight.markerId}-${insight.unit}`} insight={insight} />
               ))}
@@ -167,7 +167,7 @@ export default function OverviewPage() {
           </section>
         )}
 
-        <div className="flex flex-wrap items-center gap-3 border-b border-line pb-5">
+        <div className="flex flex-wrap items-center gap-3 rounded-xl bg-white p-3 shadow-[var(--shadow-card)] ring-1 ring-black/[0.04]">
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -201,7 +201,7 @@ export default function OverviewPage() {
           <div className="mt-12 space-y-14">
             {grouped.map((group) => (
               <section key={group.panel.id}>
-                <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-line pb-3">
+                <div className="flex flex-wrap items-baseline justify-between gap-3 rounded-xl bg-white px-4 py-3 shadow-[var(--shadow-card)] ring-1 ring-black/[0.04]">
                   <div className="flex flex-wrap items-baseline gap-3">
                     <h2 className="font-display text-lg text-ink">{group.panel.label}</h2>
                     <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
@@ -251,7 +251,7 @@ function Tile({
 }) {
   const toneClass = tone === "alert" ? "text-alert" : tone === "ok" ? "text-ok" : "text-ink";
   return (
-    <div className="bg-surface p-5">
+    <div className="rounded-xl bg-white p-5 shadow-[var(--shadow-card)] ring-1 ring-black/[0.04]">
       <Label>{label}</Label>
       <p className={`mt-2 font-mono text-2xl tabular ${toneClass}`}>{value}</p>
       {sub ? <p className="mt-1 font-mono text-[10px] text-muted">{sub}</p> : null}

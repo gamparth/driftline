@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
+import {
+  PRODUCT_NAME,
+  PRODUCT_TAGLINE,
+} from "@/lib/product";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -19,7 +23,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vitals — Health Records Timeline",
+  title: `${PRODUCT_NAME} — ${PRODUCT_TAGLINE}`,
   description:
     "Every lab report, one longitudinal record. Local-first: your data never leaves this machine.",
   other: {
@@ -40,9 +44,6 @@ export const metadata: Metadata = {
   },
 };
 
-/** Resolves the theme before first paint so the page never flashes the wrong one. */
-const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem("vitals.theme");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="light"}})()`;
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -54,9 +55,6 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${fraunces.variable} ${inter.variable} ${jetbrains.variable} h-full`}
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
-      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

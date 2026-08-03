@@ -1,6 +1,7 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
 import type { DoctorQuestion } from "@/lib/llm/questions";
 import type { NormalizedValue } from "@/lib/engine/types";
+import type { WorkspaceMode } from "@/lib/hooks/useWorkspaceMode";
 
 /**
  * Local-only persistence. Every report a user drops in lives here and nowhere
@@ -8,7 +9,7 @@ import type { NormalizedValue } from "@/lib/engine/types";
  */
 
 export const DB_NAME = "vitals";
-export const DB_VERSION = 1;
+export const DB_VERSION = 2;
 
 export type ExtractionSource = "heuristic" | "llm" | "demo";
 
@@ -33,7 +34,7 @@ export interface ReviewItem {
 }
 
 export interface StoredQuestions {
-  id: "latest";
+  id: string;
   generatedAt: string;
   questions: DoctorQuestion[];
 }
@@ -119,8 +120,37 @@ export async function listReports(): Promise<StoredReport[]> {
   return reports.sort((a, b) => a.sampledAt.localeCompare(b.sampledAt));
 }
 
+export async function listReportsForMode(mode: WorkspaceMode): Promise<StoredReport[]> {
+  const reports = await listReports();
+  return reports.filter((report) =>
+    mode === "demo" ? report.source === "demo" : report.source !== "demo",
+  );
+}
+
 export async function deleteReport(hash: string): Promise<void> {
   await (await getDb()).delete("reports", hash);
+}
+
+export async function deleteReportsBySource(source: ExtractionSource): Promise<number> {
+  const reports = await listReports();
+  const matches = reports.filter((report) => report.source === source);
+  const db = await getDb();
+  const tx = db.transaction("reports", "readwrite");
+  await Promise.all(matches.map((report) => tx.store.delete(report.hash)));
+  await tx.done;
+  return matches.length;
+}
+
+export async function deleteReportsForMode(mode: WorkspaceMode): Promise<number> {
+  const reports = await listReports();
+  const matches = reports.filter((report) =>
+    mode === "demo" ? report.source === "demo" : report.source !== "demo",
+  );
+  const db = await getDb();
+  const tx = db.transaction("reports", "readwrite");
+  await Promise.all(matches.map((report) => tx.store.delete(report.hash)));
+  await tx.done;
+  return matches.length;
 }
 
 export async function allValues(): Promise<NormalizedValue[]> {
@@ -139,12 +169,38 @@ export async function deleteReviewItem(hash: string): Promise<void> {
   await (await getDb()).delete("review", hash);
 }
 
-export async function saveQuestions(questions: DoctorQuestion[], generatedAt: string): Promise<void> {
-  await (await getDb()).put("questions", { id: "latest", generatedAt, questions });
+export async function clearReviewItems(): Promise<void> {
+  await (await getDb()).clear("review");
 }
 
-export async function loadQuestions(): Promise<StoredQuestions | undefined> {
-  return (await getDb()).get("questions", "latest");
+function questionKey(mode: WorkspaceMode): string {
+  return `latest:${mode}`;
+}
+
+export async function saveQuestions(
+  questions: DoctorQuestion[],
+  generatedAt: string,
+  mode: WorkspaceMode = "real",
+): Promise<void> {
+  await (await getDb()).put("questions", { id: questionKey(mode), generatedAt, questions });
+}
+
+export async function loadQuestions(
+  mode: WorkspaceMode = "real",
+): Promise<StoredQuestions | undefined> {
+  const db = await getDb();
+  return (
+    (await db.get("questions", questionKey(mode))) ??
+    (mode === "real" ? db.get("questions", "latest") : undefined)
+  );
+}
+
+export async function deleteQuestions(mode: WorkspaceMode = "real"): Promise<void> {
+  const db = await getDb();
+  await db.delete("questions", questionKey(mode));
+  if (mode === "real") {
+    await db.delete("questions", "latest");
+  }
 }
 
 /** The wipe control. Empties every store; the key is cleared by the caller. */

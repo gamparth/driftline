@@ -4,11 +4,13 @@ import { normalizeValue } from "@/lib/engine/normalize";
 import { extractWithLlm, anthropicInvoker } from "@/lib/llm/extract";
 import { getApiKey } from "@/lib/llm/client";
 import {
+  deleteReviewItem,
   hashBytes,
   hasReport,
   putReport,
   putReviewItem,
   type ExtractionSource,
+  type ReviewItem,
 } from "@/lib/storage/db";
 
 /**
@@ -82,6 +84,50 @@ export async function ingestPdf(
     lines,
   });
   return { status: "needs-review", filename, reason: result.reason };
+}
+
+export async function retryReviewItem(item: ReviewItem): Promise<IngestOutcome> {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    return {
+      status: "needs-review",
+      filename: item.filename,
+      reason: "Add an Anthropic API key in Settings before retrying AI extraction.",
+    };
+  }
+
+  if (item.lines.length === 0) {
+    return {
+      status: "needs-review",
+      filename: item.filename,
+      reason: "This PDF could not be read into text, so there is nothing for the AI extractor to retry.",
+    };
+  }
+
+  const result = await extractWithLlm(item.lines, anthropicInvoker(apiKey));
+  if (result.status !== "ok") {
+    await putReviewItem({ ...item, addedAt: new Date().toISOString(), reason: result.reason });
+    return { status: "needs-review", filename: item.filename, reason: result.reason };
+  }
+
+  const added = await putReport({
+    hash: item.hash,
+    filename: item.filename,
+    addedAt: new Date().toISOString(),
+    lab: result.report.lab,
+    sampledAt: result.report.sampledAt,
+    source: "llm",
+    values: result.report.values.map(normalizeValue),
+  });
+  await deleteReviewItem(item.hash);
+  return added
+    ? {
+        status: "added",
+        filename: item.filename,
+        markers: result.report.values.length,
+        source: "llm",
+      }
+    : { status: "duplicate", filename: item.filename };
 }
 
 /** The four synthetic reports behind the demo button, run through the real pipeline. */

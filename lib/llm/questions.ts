@@ -5,7 +5,7 @@ import { MODEL, createClient } from "./client";
 /**
  * "Questions for your doctor" generator. Only flagged drifts are sent — never
  * the full record — and the model is asked for questions, never for an
- * interpretation. vitals does not diagnose; this produces the list you take
+ * interpretation. The app does not diagnose; this produces the list you take
  * into the appointment.
  */
 
