@@ -38,18 +38,30 @@ Driftline is not medical advice. It reports what the lab printed and helps prepa
 
 ## Architecture
 
-```text
-PDF -> pdf.js text -> parser -> zod schema -> unit normalization
-    -> IndexedDB -> timeline engine -> dashboard / records / visit summary
+```mermaid
+flowchart LR
+  PDFs["Lab-report PDFs"] --> Text["pdf.js text extraction"]
+  Text --> Parser["Deterministic parser"]
+  Text --> Fallback["Optional AI fallback"]
+  Fallback --> Schema["zod schema"]
+  Parser --> Schema
+  Schema --> Normalize["Unit + marker normalization"]
+  Normalize --> Store["IndexedDB record"]
+  Store --> Engine["Timeline + drift engine"]
+  Engine --> UI["Dashboard, records, marker pages, visit summary"]
 ```
 
-Optional AI path:
-
-```text
-Unreadable layout -> Anthropic API with user's key -> same schema -> review or store
-```
+The optional AI fallback is used only when a user supplies an Anthropic key. It reads unusual layouts into the same schema as the deterministic parser; otherwise unreadable files stay in review.
 
 Core logic lives in `lib/engine/`, storage in `lib/storage/`, LLM boundaries in `lib/llm/`, and the Next.js app in `app/`.
+
+## Future Scope
+
+- More lab-layout templates for higher no-key extraction coverage.
+- Guided review for unreadable rows before they enter the record.
+- Better export formats for clinicians and personal archives.
+- Optional encrypted sync while keeping local-first ownership.
+- Broader marker normalization across regional naming and unit conventions.
 
 ## Tech
 
@@ -78,8 +90,3 @@ Useful extras:
 npm run fixtures   # Regenerate synthetic PDF fixtures
 npm run verify:ui  # Browser verification flow
 ```
-
-## Docs
-
-- [Specification](docs/SPEC.md)
-- [Decisions](docs/DECISIONS.md)
