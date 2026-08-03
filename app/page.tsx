@@ -59,14 +59,14 @@ export default function Landing() {
                 better question at your next visit.
               </p>
 
-              <div className="mt-10 flex flex-wrap items-center gap-4">
-                <DemoButton />
+              <div className="mt-10 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center sm:gap-4">
                 <Link
                   href="/upload"
-                  className="rounded-full border border-line bg-white px-6 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-ink shadow-[var(--shadow-card)] transition-colors duration-200 hover:bg-brand-soft"
+                  className="brand-gradient rounded-full border border-transparent px-6 py-3 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-white shadow-[var(--shadow-card)] transition-transform duration-200 hover:-translate-y-0.5"
                 >
                   Add my reports
                 </Link>
+                <DemoButton variant="secondary" />
               </div>
 
               <p className="mt-5 font-mono text-[11px] text-muted">

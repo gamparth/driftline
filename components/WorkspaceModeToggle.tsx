@@ -12,7 +12,7 @@ export function WorkspaceModeToggle() {
 
   return (
     <div
-      className="flex shrink-0 rounded-full bg-white p-1 shadow-[var(--shadow-card)] ring-1 ring-black/[0.05]"
+      className="flex shrink-0 items-center gap-5 border-b border-line bg-transparent md:gap-0 md:rounded-full md:border-b-0 md:bg-white md:p-1 md:shadow-[var(--shadow-card)] md:ring-1 md:ring-black/[0.05]"
       aria-label="Workspace mode"
     >
       {MODES.map((item) => (
@@ -21,10 +21,10 @@ export function WorkspaceModeToggle() {
           type="button"
           onClick={() => setMode(item.value)}
           aria-pressed={mode === item.value}
-          className={`rounded-full px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] transition-colors duration-200 ${
+          className={`relative px-0 py-2 font-mono text-[10px] uppercase tracking-[0.12em] transition-colors duration-200 after:absolute after:inset-x-0 after:-bottom-px after:h-px after:rounded-full after:content-[''] md:rounded-full md:px-3 md:py-1.5 md:after:hidden ${
             mode === item.value
-              ? "brand-gradient text-white shadow-sm"
-              : "text-muted hover:bg-brand-soft hover:text-ink"
+              ? "text-ink after:bg-ink md:brand-gradient md:text-white md:shadow-sm"
+              : "text-muted after:bg-transparent hover:text-ink md:hover:bg-brand-soft"
           }`}
         >
           {item.label}

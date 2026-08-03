@@ -6,7 +6,13 @@ import { loadDemoData } from "@/lib/ingest";
 import { writeWorkspaceMode } from "@/lib/hooks/useWorkspaceMode";
 
 /** Runs the four synthetic reports through the real ingest pipeline. */
-export function DemoButton({ label = "Try the demo" }: { label?: string }) {
+export function DemoButton({
+  label = "Try the demo",
+  variant = "primary",
+}: {
+  label?: string;
+  variant?: "primary" | "secondary";
+}) {
   const router = useRouter();
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +41,11 @@ export function DemoButton({ label = "Try the demo" }: { label?: string }) {
       <button
         onClick={run}
         disabled={status !== null}
-        className="brand-gradient w-full rounded-full border border-transparent px-6 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-white shadow-[var(--shadow-card)] transition-transform duration-200 hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-50 sm:w-auto"
+        className={`w-full rounded-full px-6 py-3 font-mono text-[11px] uppercase tracking-[0.14em] shadow-[var(--shadow-card)] transition-transform duration-200 hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-50 sm:w-auto ${
+          variant === "primary"
+            ? "brand-gradient border border-transparent text-white"
+            : "border border-line bg-white text-ink hover:bg-brand-soft"
+        }`}
       >
         {status ?? label}
       </button>
