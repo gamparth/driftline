@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="driftline-mark" x1="13" y1="17" x2="115" y2="111" gradientUnits="userSpaceOnUse">
+    <linearGradient id="labloom-mark" x1="13" y1="17" x2="115" y2="111" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#00a995"/>
       <stop offset=".54" stop-color="#4c57d8"/>
       <stop offset="1" stop-color="#ff7a59"/>
     </linearGradient>
   </defs>
-  <rect width="128" height="128" rx="28" fill="url(#driftline-mark)"/>
+  <rect width="128" height="128" rx="28" fill="url(#labloom-mark)"/>
   <path d="M22 75h20l10-35 21 56 13-36h20" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M25 33h78" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" opacity=".34"/>
 </svg>

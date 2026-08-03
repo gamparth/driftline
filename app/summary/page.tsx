@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Label, Section, Shell } from "@/components/Shell";
 import { LoadingState } from "@/components/States";
 import { StatusChip } from "@/components/Status";
-import { useVitals } from "@/lib/hooks/useVitals";
+import { useLabloomData } from "@/lib/hooks/useLabloomData";
 import { getApiKey } from "@/lib/llm/client";
 import { generateQuestions } from "@/lib/llm/questions";
 import { loadQuestions, saveQuestions, type StoredQuestions } from "@/lib/storage/db";
@@ -18,7 +18,7 @@ import { PRODUCT_NAME } from "@/lib/product";
  * attached so nothing has to be recalled from memory.
  */
 export default function VisitSummaryPage() {
-  const { state, attention, summary, latestDraw, reports, mode } = useVitals();
+  const { state, attention, summary, latestDraw, reports, mode } = useLabloomData();
   const [stored, setStored] = useState<StoredQuestions | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);

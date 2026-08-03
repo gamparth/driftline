@@ -7,7 +7,7 @@ import { Label, Section, Shell } from "@/components/Shell";
 import { EmptyState, LoadingState } from "@/components/States";
 import { MarkerChart } from "@/components/Chart";
 import { RangeMeter, StatusChip, TrendBadge } from "@/components/Status";
-import { useVitals } from "@/lib/hooks/useVitals";
+import { useLabloomData } from "@/lib/hooks/useLabloomData";
 import { getMarker, getPanel } from "@/lib/engine/markers";
 import { classify } from "@/lib/engine/insights";
 import {
@@ -39,7 +39,7 @@ function MarkerDetail() {
   const params = useSearchParams();
   const markerId = params.get("id");
   const unit = params.get("unit");
-  const { state, insights } = useVitals();
+  const { state, insights } = useLabloomData();
 
   const insight = useMemo(
     () => insights.find((i) => i.markerId === markerId && (unit === null || i.unit === unit)),

@@ -1,8 +1,8 @@
-# Driftline — Health Records Timeline
+# Labloom — Health Records Timeline
 
 ## Problem
 
-Lab results live in per-visit PDFs from different labs with different layouts, units, and reference ranges. Nobody sees the longitudinal picture: is creatinine drifting up over three years? Did LDL jump since the last statin change? Driftline turns any pile of lab-report PDFs into one local, private, longitudinal record with trends, drift flags, and a prepared question list for the next doctor visit.
+Lab results live in per-visit PDFs from different labs with different layouts, units, and reference ranges. Nobody sees the longitudinal picture: is creatinine drifting up over three years? Did LDL jump since the last statin change? Labloom turns any pile of lab-report PDFs into one local, private, longitudinal record with trends, drift flags, and a prepared question list for the next doctor visit.
 
 ## Scope
 

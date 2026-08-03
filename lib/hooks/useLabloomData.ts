@@ -25,7 +25,7 @@ import { useWorkspaceMode, type WorkspaceMode } from "@/lib/hooks/useWorkspaceMo
 
 export type LoadState = "loading" | "empty" | "ready";
 
-export interface VitalsData {
+export interface LabloomData {
   state: LoadState;
   reports: StoredReport[];
   series: MarkerSeries[];
@@ -41,7 +41,7 @@ export interface VitalsData {
 }
 
 /** Reads storage once, then derives every view the UI needs from it. */
-export function useVitals(): VitalsData {
+export function useLabloomData(): LabloomData {
   const [mode] = useWorkspaceMode();
   const [state, setState] = useState<LoadState>("loading");
   const [reports, setReports] = useState<StoredReport[]>([]);

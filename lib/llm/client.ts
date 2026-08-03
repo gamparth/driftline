@@ -1,9 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import {
-  LABLINE_STORAGE_PREFIX,
-  MARKLINE_STORAGE_PREFIX,
-  PRODUCT_STORAGE_PREFIX,
-} from "@/lib/product";
+import { PRODUCT_STORAGE_PREFIX } from "@/lib/product";
 
 /**
  * Bring-your-own-key Anthropic client. The key lives in localStorage and the
@@ -14,32 +10,18 @@ import {
 
 export const MODEL = "claude-opus-5";
 const KEY_STORAGE = `${PRODUCT_STORAGE_PREFIX}.anthropic-key`;
-const MARKLINE_KEY_STORAGE = `${MARKLINE_STORAGE_PREFIX}.anthropic-key`;
-const LABLINE_KEY_STORAGE = `${LABLINE_STORAGE_PREFIX}.anthropic-key`;
-const LEGACY_KEY_STORAGE = "vitals.anthropic-key";
 
 export function getApiKey(): string | null {
   if (typeof window === "undefined") return null;
-  return (
-    window.localStorage.getItem(KEY_STORAGE) ??
-    window.localStorage.getItem(MARKLINE_KEY_STORAGE) ??
-    window.localStorage.getItem(LABLINE_KEY_STORAGE) ??
-    window.localStorage.getItem(LEGACY_KEY_STORAGE)
-  );
+  return window.localStorage.getItem(KEY_STORAGE);
 }
 
 export function setApiKey(key: string): void {
   window.localStorage.setItem(KEY_STORAGE, key.trim());
-  window.localStorage.removeItem(MARKLINE_KEY_STORAGE);
-  window.localStorage.removeItem(LABLINE_KEY_STORAGE);
-  window.localStorage.removeItem(LEGACY_KEY_STORAGE);
 }
 
 export function clearApiKey(): void {
   window.localStorage.removeItem(KEY_STORAGE);
-  window.localStorage.removeItem(MARKLINE_KEY_STORAGE);
-  window.localStorage.removeItem(LABLINE_KEY_STORAGE);
-  window.localStorage.removeItem(LEGACY_KEY_STORAGE);
 }
 
 export function hasApiKey(): boolean {

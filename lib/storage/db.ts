@@ -8,7 +8,7 @@ import type { WorkspaceMode } from "@/lib/hooks/useWorkspaceMode";
  * else — there is no sync, no export, and `wipeAll` really does empty it.
  */
 
-export const DB_NAME = "vitals";
+export const DB_NAME = "labloom";
 export const DB_VERSION = 2;
 
 export type ExtractionSource = "heuristic" | "llm" | "demo";
@@ -39,17 +39,17 @@ export interface StoredQuestions {
   questions: DoctorQuestion[];
 }
 
-interface VitalsDB extends DBSchema {
+interface LabloomDB extends DBSchema {
   reports: { key: string; value: StoredReport; indexes: { sampledAt: string } };
   review: { key: string; value: ReviewItem };
   questions: { key: string; value: StoredQuestions };
 }
 
-let dbPromise: Promise<IDBPDatabase<VitalsDB>> | null = null;
+let dbPromise: Promise<IDBPDatabase<LabloomDB>> | null = null;
 
-export function getDb(): Promise<IDBPDatabase<VitalsDB>> {
+export function getDb(): Promise<IDBPDatabase<LabloomDB>> {
   if (!dbPromise) {
-    dbPromise = openDB<VitalsDB>(DB_NAME, DB_VERSION, {
+    dbPromise = openDB<LabloomDB>(DB_NAME, DB_VERSION, {
       upgrade(db) {
         if (!db.objectStoreNames.contains("reports")) {
           const reports = db.createObjectStore("reports", { keyPath: "hash" });

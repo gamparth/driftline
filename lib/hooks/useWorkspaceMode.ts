@@ -6,7 +6,7 @@ import { PRODUCT_STORAGE_PREFIX } from "@/lib/product";
 export type WorkspaceMode = "real" | "demo";
 
 const STORAGE_KEY = `${PRODUCT_STORAGE_PREFIX}.workspace-mode`;
-const EVENT_NAME = "driftline:workspace-mode";
+const EVENT_NAME = "labloom:workspace-mode";
 
 export function readWorkspaceMode(): WorkspaceMode {
   if (typeof window === "undefined") return "real";
@@ -47,8 +47,8 @@ function subscribeWorkspaceMode(onStoreChange: () => void): () => void {
 
   window.addEventListener(EVENT_NAME, onStoreChange);
   window.addEventListener("storage", handleStorage);
-    return () => {
-      window.removeEventListener(EVENT_NAME, onStoreChange);
-      window.removeEventListener("storage", handleStorage);
-    };
+  return () => {
+    window.removeEventListener(EVENT_NAME, onStoreChange);
+    window.removeEventListener("storage", handleStorage);
+  };
 }

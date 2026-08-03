@@ -278,7 +278,7 @@ function ApiKeyPrompt() {
           Add a Claude key for the full real-record workflow.
         </p>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-ink-soft">
-          Driftline can parse clean tables without a key. A Claude API key unlocks the fallback
+          {PRODUCT_NAME} can parse clean tables without a key. A Claude API key unlocks the fallback
           extractor for awkward PDFs and lets Visit Summary draft appointment questions from your
           flagged markers.
         </p>

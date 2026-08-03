@@ -6,7 +6,7 @@ import { Label, Section, Shell } from "@/components/Shell";
 import { LoadingState } from "@/components/States";
 import { MarkerCard, markerHref } from "@/components/MarkerCard";
 import { StatusChip } from "@/components/Status";
-import { useVitals } from "@/lib/hooks/useVitals";
+import { useLabloomData } from "@/lib/hooks/useLabloomData";
 import type { MarkerInsight } from "@/lib/engine/insights";
 import { describeGap, formatDate, formatPercent, formatValue } from "@/lib/format";
 
@@ -14,7 +14,7 @@ type Filter = "all" | "attention" | "out-of-range";
 type Sort = "attention" | "name" | "recent";
 
 export default function OverviewPage() {
-  const { state, reports, insights, attention, panels, latestDraw, summary, mode } = useVitals();
+  const { state, reports, insights, attention, panels, latestDraw, summary, mode } = useLabloomData();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("attention");
@@ -235,7 +235,7 @@ function EmptyDashboard({ mode }: { mode: "real" | "demo" }) {
           <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
             {isDemo
               ? "The demo dashboard uses sample PDFs, runs the same parser, and keeps every value clearly labeled as demo data."
-              : "Drop in your own lab-report PDFs and Driftline will turn them into markers, flags, trends, and a visit-ready summary in this browser."}
+              : "Drop in your own lab-report PDFs and Labloom will turn them into markers, flags, trends, and a visit-ready summary in this browser."}
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Link

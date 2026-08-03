@@ -1,10 +1,10 @@
-# Driftline
+# Labloom
 
 Local-first lab-report intelligence.
 
-Driftline turns scattered lab-report PDFs into one browser-local health record: timelines, marker trends, printed-range flags, records management, and a visit-ready summary.
+Labloom turns scattered lab-report PDFs into one browser-local health record: timelines, marker trends, printed-range flags, records management, and a visit-ready summary.
 
-[Live app](https://driftline-eosin.vercel.app)
+Live app URL TBD after redeploying Labloom.
 
 ## What It Does
 
@@ -26,7 +26,7 @@ Driftline turns scattered lab-report PDFs into one browser-local health record: 
 ## Privacy Boundary
 
 - No account.
-- No Driftline backend.
+- No Labloom backend.
 - No analytics pipeline in this repo.
 - Reports are parsed in the browser.
 - Records are stored in IndexedDB.
@@ -34,7 +34,7 @@ Driftline turns scattered lab-report PDFs into one browser-local health record: 
 - Duplicate PDFs are ignored by content hash.
 - Anthropic is contacted only when the user supplies a key for optional AI extraction or question drafting.
 
-Driftline is not medical advice. It reports what the lab printed and helps prepare better questions for a clinician.
+Labloom is not medical advice. It reports what the lab printed and helps prepare better questions for a clinician.
 
 ## Architecture
 

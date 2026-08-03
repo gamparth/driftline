@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { DemoButton } from "@/components/DemoButton";
 import { PageHeader, Section, Shell, Stat } from "@/components/Shell";
 import { EmptyState, LoadingState } from "@/components/States";
-import { useVitals } from "@/lib/hooks/useVitals";
+import { useLabloomData } from "@/lib/hooks/useLabloomData";
 import { DEMO_FILES } from "@/lib/ingest";
 import { deleteReportsBySource } from "@/lib/storage/db";
 import { formatDate } from "@/lib/format";
@@ -13,7 +13,7 @@ import { PRODUCT_NAME } from "@/lib/product";
 import { useWorkspaceMode } from "@/lib/hooks/useWorkspaceMode";
 
 export default function DemoPage() {
-  const { state, reports, summary, attention, reload } = useVitals();
+  const { state, reports, summary, attention, reload } = useLabloomData();
   const [, setMode] = useWorkspaceMode();
   const [notice, setNotice] = useState<string | null>(null);
   const demoReports = useMemo(() => reports.filter((report) => report.source === "demo"), [reports]);

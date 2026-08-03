@@ -124,7 +124,7 @@ async function main() {
   await page.getByRole("button", { name: /yes, delete everything/i }).click();
   await page.waitForSelector("text=No reports stored", { timeout: 30_000 });
   const remaining = (await page.evaluate(`new Promise((resolve, reject) => {
-    const req = indexedDB.open("vitals");
+    const req = indexedDB.open("labloom");
     req.onsuccess = () => {
       const db = req.result;
       const count = db.transaction("reports", "readonly").objectStore("reports").count();

@@ -1,13 +1,7 @@
 import { z } from "zod";
 import { LabValueSchema } from "@/lib/engine/types";
 import type { StoredReport } from "@/lib/storage/db";
-import {
-  LABLINE_EXPORT_FORMAT,
-  LEGACY_EXPORT_FORMAT,
-  MARKLINE_EXPORT_FORMAT,
-  PRODUCT_EXPORT_FORMAT,
-  PRODUCT_NAME,
-} from "@/lib/product";
+import { PRODUCT_EXPORT_FORMAT, PRODUCT_NAME } from "@/lib/product";
 
 /**
  * Local export and import. A record you can only ever read inside one browser
@@ -35,12 +29,7 @@ const StoredReportSchema = z.object({
 });
 
 export const ExportBundleSchema = z.object({
-  format: z.union([
-    z.literal(EXPORT_FORMAT),
-    z.literal(MARKLINE_EXPORT_FORMAT),
-    z.literal(LABLINE_EXPORT_FORMAT),
-    z.literal(LEGACY_EXPORT_FORMAT),
-  ]),
+  format: z.literal(EXPORT_FORMAT),
   version: z.number().int().positive(),
   exportedAt: z.string(),
   reports: z.array(StoredReportSchema),

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { Label, PageHeader, Section, Shell } from "@/components/Shell";
 import { LoadingState } from "@/components/States";
-import { useVitals } from "@/lib/hooks/useVitals";
+import { useLabloomData } from "@/lib/hooks/useLabloomData";
 import { buildExportBundle, downloadFile, parseImportBundle, toCsv } from "@/lib/exchange";
 import {
   clearReviewItems,
@@ -14,7 +14,7 @@ import {
   putReport,
 } from "@/lib/storage/db";
 import { formatDate } from "@/lib/format";
-import { PRODUCT_NAME } from "@/lib/product";
+import { PRODUCT_NAME, PRODUCT_SLUG } from "@/lib/product";
 
 const SOURCE_LABEL: Record<string, string> = {
   heuristic: "Built-in parser",
@@ -23,7 +23,7 @@ const SOURCE_LABEL: Record<string, string> = {
 };
 
 export default function ReportsPage() {
-  const { state, reports, summary, reload, mode } = useVitals();
+  const { state, reports, summary, reload, mode } = useLabloomData();
   const [confirmWipe, setConfirmWipe] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +36,7 @@ export default function ReportsPage() {
   function exportJson() {
     const bundle = buildExportBundle(reports, new Date().toISOString());
     downloadFile(
-      `driftline-${mode}-record-${stamp()}.json`,
+      `${PRODUCT_SLUG}-${mode}-record-${stamp()}.json`,
       JSON.stringify(bundle, null, 2),
       "application/json",
     );
@@ -44,7 +44,7 @@ export default function ReportsPage() {
   }
 
   function exportCsv() {
-    downloadFile(`driftline-${mode}-measurements-${stamp()}.csv`, toCsv(reports), "text/csv");
+    downloadFile(`${PRODUCT_SLUG}-${mode}-measurements-${stamp()}.csv`, toCsv(reports), "text/csv");
     setNotice("CSV saved to your downloads.");
   }
 
