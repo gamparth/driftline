@@ -6,6 +6,7 @@ import { useWorkspaceMode } from "@/lib/hooks/useWorkspaceMode";
 const REAL_LINKS = [
   ["Dashboard", "/timeline"],
   ["Upload", "/upload"],
+  ["Visit", "/summary"],
   ["Records", "/reports"],
   ["Settings", "/settings"],
 ];

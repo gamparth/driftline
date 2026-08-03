@@ -49,11 +49,13 @@ export default function DemoPage() {
           </p>
         ) : null}
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
-          <div className="rounded-xl border border-line bg-surface p-6 md:p-8">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-8">
+          <div className="rounded-xl border border-line bg-surface p-5 md:p-8">
             <div className="flex flex-wrap items-start justify-between gap-6">
               <div>
-                <h2 className="font-display text-2xl text-ink">Synthetic longitudinal record</h2>
+                <h2 className="font-display text-2xl leading-tight text-ink md:text-3xl">
+                  Synthetic longitudinal record
+                </h2>
                 <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
                   Load four sample PDFs from different fictional labs, spanning multiple years. Use
                   it to evaluate dashboard filtering, marker drilldowns, visit summaries, exports,
@@ -73,16 +75,16 @@ export default function DemoPage() {
               />
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
               <Link
                 href="/timeline"
-                className="rounded-full bg-brand px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white transition-opacity duration-200 hover:opacity-90"
+                className="rounded-full bg-brand px-5 py-2.5 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-white transition-opacity duration-200 hover:opacity-90"
               >
                 Open dashboard
               </Link>
               <Link
                 href="/summary"
-                className="rounded-full border border-line px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-ink transition-colors duration-200 hover:border-line-strong"
+                className="rounded-full border border-line px-5 py-2.5 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-ink transition-colors duration-200 hover:border-line-strong"
               >
                 View visit summary
               </Link>
@@ -93,14 +95,14 @@ export default function DemoPage() {
                   setNotice(`Removed ${removed} demo report${removed === 1 ? "" : "s"}.`);
                 }}
                 disabled={demoReports.length === 0}
-                className="rounded-full border border-line px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-muted transition-colors duration-200 hover:border-line-strong hover:text-alert disabled:opacity-40"
+                className="rounded-full border border-line px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em] text-muted transition-colors duration-200 hover:border-line-strong hover:text-alert disabled:opacity-40"
               >
                 Clear demo data
               </button>
             </div>
           </div>
 
-          <aside className="rounded-xl border border-line bg-surface p-6">
+          <aside className="rounded-xl border border-line bg-surface p-5 md:p-6">
             <h2 className="font-display text-lg text-ink">Included PDFs</h2>
             <ul className="mt-5 space-y-3">
               {DEMO_FILES.map((file) => (
@@ -122,8 +124,8 @@ export default function DemoPage() {
         {demoReports.length === 0 ? (
           <div className="mt-10">
             <EmptyState
-              title="No demo data loaded"
-              body="Load the sample PDFs to see the dashboard, marker pages, and visit summary populated immediately."
+              title="Load the sample workspace"
+              body="Start with the included PDFs to populate the demo dashboard, marker pages, and visit summary immediately."
             />
           </div>
         ) : (

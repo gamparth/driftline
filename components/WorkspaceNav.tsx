@@ -25,7 +25,7 @@ export function WorkspaceNav() {
   const items = mode === "demo" ? DEMO_NAV : REAL_NAV;
 
   return (
-    <nav className="flex flex-wrap items-center gap-1 rounded-full bg-white px-1.5 py-1 shadow-[var(--shadow-card)] ring-1 ring-black/[0.05]">
+    <nav className="flex w-max min-w-full flex-nowrap items-center gap-1 rounded-full bg-white/95 px-1.5 py-1 shadow-[var(--shadow-card)] ring-1 ring-black/[0.04] md:min-w-0">
       {items.map((item) => {
         const active = pathname === item.href;
         return (
@@ -33,7 +33,7 @@ export function WorkspaceNav() {
             key={item.href}
             href={item.href}
             aria-current={active ? "page" : undefined}
-            className={`rounded-full px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] transition-colors duration-200 ${
+            className={`shrink-0 rounded-full px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] transition-colors duration-200 sm:tracking-[0.14em] ${
               active
                 ? "bg-brand-soft text-brand"
                 : "text-muted hover:bg-brand-soft hover:text-ink"

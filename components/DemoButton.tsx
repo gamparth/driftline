@@ -31,11 +31,11 @@ export function DemoButton({ label = "Try the demo" }: { label?: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-2 sm:w-auto">
       <button
         onClick={run}
         disabled={status !== null}
-        className="brand-gradient rounded-full border border-transparent px-6 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-white shadow-[var(--shadow-card)] transition-transform duration-200 hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-50"
+        className="brand-gradient w-full rounded-full border border-transparent px-6 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-white shadow-[var(--shadow-card)] transition-transform duration-200 hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-50 sm:w-auto"
       >
         {status ?? label}
       </button>

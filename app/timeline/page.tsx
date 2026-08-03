@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 import { Label, Section, Shell } from "@/components/Shell";
 import { LoadingState } from "@/components/States";
 import { MarkerCard, markerHref } from "@/components/MarkerCard";
@@ -16,17 +15,11 @@ type Sort = "attention" | "name" | "recent";
 
 export default function OverviewPage() {
   const { state, reports, insights, attention, panels, latestDraw, summary, mode } = useVitals();
-  const router = useRouter();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("attention");
 
-  const shouldRedirect = state !== "loading" && (state === "empty" || insights.length === 0);
-
-  useEffect(() => {
-    if (!shouldRedirect) return;
-    router.replace(mode === "demo" ? "/demo" : "/upload");
-  }, [mode, router, shouldRedirect]);
+  const isEmpty = state !== "loading" && (state === "empty" || insights.length === 0);
 
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -63,12 +56,10 @@ export default function OverviewPage() {
     );
   }
 
-  if (shouldRedirect) {
+  if (isEmpty) {
     return (
       <Shell>
-        <Section>
-          <LoadingState rows={2} />
-        </Section>
+        <EmptyDashboard mode={mode} />
       </Shell>
     );
   }
@@ -228,6 +219,62 @@ export default function OverviewPage() {
         )}
       </Section>
     </Shell>
+  );
+}
+
+function EmptyDashboard({ mode }: { mode: "real" | "demo" }) {
+  const isDemo = mode === "demo";
+  return (
+    <>
+      <div className="page-band soft-section">
+        <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:px-10 md:py-14">
+          <Label>{isDemo ? "Demo dashboard" : "Your dashboard"}</Label>
+          <h1 className="mt-4 max-w-3xl font-display text-[2.15rem] font-semibold leading-[1.04] text-ink sm:text-4xl md:text-5xl">
+            {isDemo ? "Load sample reports to see the dashboard." : "Add reports to build your lab timeline."}
+          </h1>
+          <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
+            {isDemo
+              ? "The demo dashboard uses sample PDFs, runs the same parser, and keeps every value clearly labeled as demo data."
+              : "Drop in your own lab-report PDFs and Driftline will turn them into markers, flags, trends, and a visit-ready summary in this browser."}
+          </p>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Link
+              href={isDemo ? "/demo" : "/upload"}
+              className="brand-gradient rounded-full px-5 py-3 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-white shadow-[var(--shadow-card)] transition-transform duration-200 hover:-translate-y-0.5"
+            >
+              {isDemo ? "Load demo data" : "Upload reports"}
+            </Link>
+            <Link
+              href={isDemo ? "/reports" : "/settings"}
+              className="rounded-full border border-line bg-white px-5 py-3 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-ink shadow-[var(--shadow-card)] transition-colors duration-200 hover:bg-brand-soft"
+            >
+              {isDemo ? "View records" : "Add API key"}
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <Section>
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            ["01", "Upload", isDemo ? "Start from the bundled sample PDFs." : "Add PDFs from your lab portal or import an exported record."],
+            ["02", "Review", "Unreadable layouts land in a queue so the app never guesses silently."],
+            ["03", "Prepare", "Open a dashboard, marker drilldowns, and a visit summary once values are read."],
+          ].map(([step, title, body]) => (
+            <div
+              key={step}
+              className="rounded-xl bg-white p-5 shadow-[var(--shadow-card)] ring-1 ring-black/[0.04] md:p-6"
+            >
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-brand">
+                {step}
+              </span>
+              <h2 className="mt-5 font-display text-xl text-ink">{title}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+    </>
   );
 }
 

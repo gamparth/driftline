@@ -5,7 +5,9 @@ export function Logo({ compact = false }: { compact?: boolean }) {
     <span className="inline-flex items-center gap-2.5">
       <LogoMark />
       {!compact ? (
-        <span className="font-display text-xl font-semibold text-ink">{PRODUCT_NAME}</span>
+        <span className="font-display text-lg font-semibold text-ink sm:text-xl">
+          {PRODUCT_NAME}
+        </span>
       ) : null}
     </span>
   );
@@ -13,10 +15,10 @@ export function Logo({ compact = false }: { compact?: boolean }) {
 
 export function LogoMark() {
   return (
-    <span className="brand-gradient grid h-9 w-9 place-items-center rounded-lg text-white shadow-[var(--shadow-card)]">
+    <span className="brand-gradient grid h-8 w-8 place-items-center rounded-lg text-white shadow-[var(--shadow-card)] sm:h-9 sm:w-9">
       <svg
-        width="19"
-        height="19"
+        width="18"
+        height="18"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"

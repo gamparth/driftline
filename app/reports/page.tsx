@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { Label, PageHeader, Section, Shell } from "@/components/Shell";
-import { EmptyState, LoadingState } from "@/components/States";
+import { LoadingState } from "@/components/States";
 import { useVitals } from "@/lib/hooks/useVitals";
 import { buildExportBundle, downloadFile, parseImportBundle, toCsv } from "@/lib/exchange";
 import {
@@ -153,15 +153,9 @@ export default function ReportsPage() {
 
           {reports.length === 0 ? (
             <div className="mt-8">
-              <EmptyState
-                title={mode === "demo" ? "No demo reports loaded" : "No reports stored"}
-                body={
-                  mode === "demo"
-                    ? "Load the sample PDFs from Demo to populate this workspace."
-                    : "Add a lab-report PDF, or import a record you exported earlier."
-                }
-                actionHref={mode === "demo" ? "/demo" : "/upload"}
-                actionLabel={mode === "demo" ? "Open demo" : "Add a report"}
+              <EmptyRecords
+                mode={mode}
+                onImport={mode === "real" ? () => fileInput.current?.click() : undefined}
               />
             </div>
           ) : (
@@ -202,7 +196,7 @@ export default function ReportsPage() {
           )}
         </div>
 
-        <div className="mt-16 rounded-xl border border-line bg-surface p-6 md:p-8">
+        <div className="mt-16 rounded-xl bg-alert-soft p-6 shadow-[var(--shadow-card)] ring-1 ring-alert/20 md:p-8">
           <h2 className="font-display text-lg text-ink">
             {mode === "demo" ? "Clear demo data" : "Delete real record"}
           </h2>
@@ -226,7 +220,7 @@ export default function ReportsPage() {
                   );
                   await reload();
                 }}
-                className="rounded-full bg-alert px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white transition-opacity duration-200 hover:opacity-90"
+                className="rounded-full bg-alert px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white shadow-[var(--shadow-card)] transition-opacity duration-200 hover:opacity-90"
               >
                 {mode === "demo" ? "Yes, clear demo" : "Yes, delete real record"}
               </button>
@@ -241,7 +235,7 @@ export default function ReportsPage() {
             <button
               onClick={() => setConfirmWipe(true)}
               disabled={reports.length === 0}
-              className="mt-6 rounded-full border border-alert/40 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-alert transition-colors duration-200 hover:bg-alert-soft disabled:opacity-40"
+              className="mt-6 rounded-full bg-alert px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white shadow-[var(--shadow-card)] transition-opacity duration-200 hover:opacity-90 disabled:opacity-40"
             >
               {mode === "demo" ? "Clear demo data" : "Wipe real data"}
             </button>
@@ -257,5 +251,63 @@ export default function ReportsPage() {
         </p>
       </Section>
     </Shell>
+  );
+}
+
+function EmptyRecords({
+  mode,
+  onImport,
+}: {
+  mode: "real" | "demo";
+  onImport?: () => void;
+}) {
+  const isDemo = mode === "demo";
+  return (
+    <div className="rounded-xl bg-white p-5 shadow-[var(--shadow-card)] ring-1 ring-black/[0.04] md:p-8">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
+        <div>
+          <Label>{isDemo ? "Demo records" : "Records workspace"}</Label>
+          <h3 className="mt-4 max-w-2xl font-display text-3xl font-semibold leading-tight text-ink md:text-4xl">
+            {isDemo ? "Load demo reports to manage sample data." : "Add reports or bring back an exported record."}
+          </h3>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted">
+            {isDemo
+              ? "Sample PDFs appear here after loading the demo. Clearing them keeps your real record untouched."
+              : "This page is the browser-local vault for your lab reports. Export before switching browsers, import a saved record, or remove files when you no longer need them."}
+          </p>
+
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Link
+              href={isDemo ? "/demo" : "/upload"}
+              className="brand-gradient rounded-full px-5 py-3 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-white shadow-[var(--shadow-card)] transition-transform duration-200 hover:-translate-y-0.5"
+            >
+              {isDemo ? "Open demo" : "Add a report"}
+            </Link>
+            {onImport ? (
+              <button
+                type="button"
+                onClick={onImport}
+                className="rounded-full border border-line bg-white px-5 py-3 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-ink shadow-[var(--shadow-card)] transition-colors duration-200 hover:bg-brand-soft"
+              >
+                Import record
+              </button>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="grid gap-3">
+          {[
+            ["Local only", "Reports stay in this browser unless you export them."],
+            ["Duplicate-safe", "Re-adding the same PDF does not pollute your record."],
+            ["Clean delete", isDemo ? "Clear demo data without touching real reports." : "Delete real data only when you are sure."],
+          ].map(([title, body]) => (
+            <div key={title} className="rounded-lg bg-surface-2 p-4">
+              <h4 className="font-display text-lg text-ink">{title}</h4>
+              <p className="mt-1 text-sm leading-relaxed text-muted">{body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

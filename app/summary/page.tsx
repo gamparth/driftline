@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Label, Section, Shell } from "@/components/Shell";
-import { EmptyState, LoadingState } from "@/components/States";
+import { LoadingState } from "@/components/States";
 import { StatusChip } from "@/components/Status";
 import { useVitals } from "@/lib/hooks/useVitals";
 import { getApiKey } from "@/lib/llm/client";
@@ -61,15 +61,7 @@ export default function VisitSummaryPage() {
   if (summary.markers === 0) {
     return (
       <Shell>
-        <Section>
-          <EmptyState
-            title="Nothing to summarise yet"
-            body={`Add a lab report and ${PRODUCT_NAME} will build a one-page summary you can print for your next appointment.`}
-            actionHref={mode === "demo" ? "/demo" : "/upload"}
-            actionLabel={mode === "demo" ? "Load demo" : "Add a report"}
-            titleAs="h1"
-          />
-        </Section>
+        <EmptyVisit mode={mode} />
       </Shell>
     );
   }
@@ -234,6 +226,59 @@ export default function VisitSummaryPage() {
         </article>
       </Section>
     </Shell>
+  );
+}
+
+function EmptyVisit({ mode }: { mode: "real" | "demo" }) {
+  const isDemo = mode === "demo";
+  return (
+    <>
+      <div className="page-band soft-section">
+        <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:px-10 md:py-14">
+          <Label>{isDemo ? "Demo visit" : "Visit summary"}</Label>
+          <h1 className="mt-4 max-w-3xl font-display text-[2.15rem] font-semibold leading-[1.04] text-ink sm:text-4xl md:text-5xl">
+            {isDemo ? "Load demo reports to preview the visit sheet." : "Your visit sheet appears after reports are read."}
+          </h1>
+          <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
+            {isDemo
+              ? "Sample reports produce the same printable summary as a real record, with demo labels kept separate."
+              : `${PRODUCT_NAME} turns flags and date-stamped values into a concise page for your appointment. It does not diagnose or recommend treatment.`}
+          </p>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Link
+              href={isDemo ? "/demo" : "/upload"}
+              className="brand-gradient rounded-full px-5 py-3 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-white shadow-[var(--shadow-card)] transition-transform duration-200 hover:-translate-y-0.5"
+            >
+              {isDemo ? "Load demo data" : "Upload reports"}
+            </Link>
+            <Link
+              href="/reports"
+              className="rounded-full border border-line bg-white px-5 py-3 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-ink shadow-[var(--shadow-card)] transition-colors duration-200 hover:bg-brand-soft"
+            >
+              View records
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <Section>
+        <div className="rounded-xl bg-white p-5 shadow-[var(--shadow-card)] ring-1 ring-black/[0.04] md:p-8">
+          <Label>What will appear here</Label>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {[
+              ["Lab summary", "Report count, date range, tracked markers, and how much history is available."],
+              ["Markers to ask about", "Only values outside printed ranges or moving quickly, with numbers attached."],
+              ["Question draft", "Optional AI-generated prompts from flagged markers when an API key is saved."],
+            ].map(([title, body]) => (
+              <div key={title} className="rounded-lg bg-surface-2 p-4">
+                <h2 className="font-display text-lg text-ink">{title}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Section>
+    </>
   );
 }
 
